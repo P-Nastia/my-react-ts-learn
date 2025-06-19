@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import {useGetAllCategoriesQuery} from "../../services/apiCategory.ts";
-import {API_BASE_URL} from "../../constants/api.ts";
+import {APP_ENV} from "../../env";
 
 const UserHomePage: React.FC = () => {
     // Отримуємо категорії з API
@@ -47,7 +47,7 @@ const UserHomePage: React.FC = () => {
                                 className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition"
                             >
                                 <img
-                                    src={`${API_BASE_URL}/images/400_${cat.image}`}
+                                    src={`${APP_ENV.IMAGES_400_URL}${cat.image}`}
                                     alt={cat.name}
                                     className="w-full h-48 object-cover transform group-hover:scale-105 transition"
                                 />

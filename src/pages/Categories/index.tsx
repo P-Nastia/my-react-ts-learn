@@ -6,7 +6,7 @@ import {
     TableHeader,
     TableRow,
 } from "../../components/ui/table";
-import {API_BASE_URL} from "../../constants/api.ts";
+import {APP_ENV} from "../../env";
 
 const CategoriesListPage: React.FC = () => {
 
@@ -51,7 +51,7 @@ const CategoriesListPage: React.FC = () => {
                                 <TableCell className="py-3">
                                     <div className="h-[50px] w-[50px] overflow-hidden rounded-md">
                                         <img
-                                            src={`${API_BASE_URL}/images/100_${category.image}`}
+                                            src={`${APP_ENV.IMAGES_100_URL}${category.image}`}
                                             alt={category.name}
                                             className="h-full w-full object-cover"
                                         />
