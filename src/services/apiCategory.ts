@@ -15,7 +15,7 @@ export const apiCategory = createApi({
                 try {
                     const formData= serialize(newCategory); // перетворення JSON
                     return {
-                        url: '',
+                        url: 'create',
                         method: 'POST',
                         body: formData
                     }

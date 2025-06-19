@@ -6,6 +6,7 @@ import NotFound from "./pages/OtherPage/NotFound.tsx";
 import CategoriesListPage from "./pages/Categories";
 import UserLayout from "./layout/user/UserLayout.tsx";
 import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
+import CategoriesCreatePage from "./pages/Categories/create/create.tsx";
 
 const App: React.FC = () => {
   console.log("App rendered");
@@ -24,6 +25,7 @@ const App: React.FC = () => {
 
               <Route path="categories">
                 <Route index  element={<CategoriesListPage />} />
+                <Route path={'create'} element={<CategoriesCreatePage />} />
               </Route>
             </Route>
 
