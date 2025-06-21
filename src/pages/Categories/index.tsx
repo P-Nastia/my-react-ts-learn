@@ -9,6 +9,9 @@ import {
 import {APP_ENV} from "../../env";
 import {Link} from "react-router";
 import {BoxIcon} from "../../icons";
+import {Button, Space} from "antd";
+import {CloseCircleFilled, EditOutlined} from "@ant-design/icons";
+
 
 const CategoriesListPage: React.FC = () => {
 
@@ -47,6 +50,7 @@ const CategoriesListPage: React.FC = () => {
                             <TableCell isHeader className="py-3 text-start">Category</TableCell>
                             <TableCell isHeader className="py-3 text-start">Slug</TableCell>
                             <TableCell isHeader className="py-3 text-start">Image</TableCell>
+                            <TableCell isHeader className="py-3 text-start">Action</TableCell>
                         </TableRow>
                     </TableHeader>
 
@@ -69,6 +73,16 @@ const CategoriesListPage: React.FC = () => {
                                             className="h-full w-full object-cover"
                                         />
                                     </div>
+                                </TableCell>
+
+                                <TableCell className="py-3">
+                                    <Space size="middle">
+                                        <Link to={`edit/${category.id}`}>
+                                            <Button icon={<EditOutlined />} />
+                                        </Link>
+
+                                        {/*<Button danger icon={<CloseCircleFilled />} onClick={() => onDelete(cat.id)} />*/}
+                                    </Space>
                                 </TableCell>
                             </TableRow>
                         ))}

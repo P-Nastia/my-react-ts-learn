@@ -9,14 +9,18 @@ const { Dragger } = Upload;
 type ImageUploadFormItemProps = {
     name: string;
     label?: string;
+    src?:string,
 };
 
 const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                                                                      name,
                                                                      label = "Фото",
+                                                                     src="",
                                                                  }) => {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+    console.log("src", src);
+    console.log("preview", previewUrl);
     const props: UploadProps = {
         name: "file",
         multiple: false,
@@ -56,7 +60,7 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                 ) : (
                     <div className="relative w-48 h-48 mx-auto border border-dashed border-gray-300 rounded-lg overflow-hidden shadow-md">
                         <img
-                            src={previewUrl}
+                            src={previewUrl?previewUrl:src}
                             alt="Preview"
                             className="w-full h-full object-cover"
                         />

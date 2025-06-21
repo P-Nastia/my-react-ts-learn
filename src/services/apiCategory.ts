@@ -1,22 +1,27 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
-import type {ICategoryCreate, ICategoryItem} from "./types.ts";
+import type {ICategoryCreate, ICategoryEdit, ICategoryItem} from "./types.ts";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import {serialize} from "object-to-formdata";
 
 export const apiCategory = createApi({
     reducerPath: 'api',
     baseQuery: createBaseQuery('categories'),
-    tagTypes:['Category'],
+    tagTypes: ['Category','Categories'], // для оновлення категорії коли з нею проводяться дії
     endpoints: (builder) => ({
-        getAllCategories: builder.query<ICategoryItem, void>({
-            query: () => ''
+        getAllCategories: builder.query<ICategoryItem[], void>({
+            query: () => '',
+            providesTags: ['Category'],
         }),
-        createCategory: builder.mutation<ICategoryItem, ICategoryCreate>({ // спочатку те, що вертає, потім -- шо вертає запит
-            query:(newCategory) =>{
+        getCategoryById: builder.query<ICategoryItem, number>({
+            query: (id) => `${id}`,
+            providesTags:['Category']
+        }),
+        createCategory: builder.mutation<ICategoryItem, ICategoryCreate>({
+            query: (newCategory) => {
                 try {
-                    const formData= serialize(newCategory); // перетворення JSON
+                    const formData = serialize(newCategory);
                     return {
-                        url: 'create',
+                        url: '',
                         method: 'POST',
                         body: formData
                     }
@@ -25,10 +30,29 @@ export const apiCategory = createApi({
                     throw new Error('Error create category');
                 }
             },
-            invalidatesTags:['Category'],
-        })
+            invalidatesTags: ['Categories'],
+        }),
+        editCategory: builder.mutation<ICategoryItem, ICategoryEdit>({
+            query: (newCategory) => {
+                try {
+                    const formData = serialize(newCategory);
+                    return {
+                        url: 'edit',
+                        method: 'PUT',
+                        body: formData,
+                    };
+                } catch {
+                    throw new Error('Error edit category');
+                }
+            },
+            invalidatesTags: ['Categories','Category'],
+        }),
     }),
 });
 
-// queryrtk 
-export const { useGetAllCategoriesQuery,useCreateCategoryMutation } = apiCategory;
+export const {
+    useGetAllCategoriesQuery,
+    useEditCategoryMutation,
+    useGetCategoryByIdQuery,
+    useCreateCategoryMutation
+} = apiCategory;

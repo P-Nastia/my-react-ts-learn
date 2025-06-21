@@ -7,6 +7,7 @@ import CategoriesListPage from "./pages/Categories";
 import UserLayout from "./layout/user/UserLayout.tsx";
 import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
 import CategoriesCreatePage from "./pages/Categories/create";
+import CategoriesEditPage from "./pages/Categories/edit";
 
 const App: React.FC = () => {
   console.log("App rendered");
@@ -25,7 +26,8 @@ const App: React.FC = () => {
 
               <Route path="categories">
                 <Route index  element={<CategoriesListPage />} />
-                <Route path={'create'} element={<CategoriesCreatePage />} />
+                <Route path='create' element={<CategoriesCreatePage />} />
+                <Route path={"edit/:id"} element={<CategoriesEditPage />} />
               </Route>
             </Route>
 
