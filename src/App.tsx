@@ -6,7 +6,7 @@ import NotFound from "./pages/OtherPage/NotFound.tsx";
 import CategoriesListPage from "./pages/Categories";
 import UserLayout from "./layout/user/UserLayout.tsx";
 import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
-import CategoriesCreatePage from "./pages/Categories/create/create.tsx";
+import CategoriesCreatePage from "./pages/Categories/create";
 
 const App: React.FC = () => {
   console.log("App rendered");
