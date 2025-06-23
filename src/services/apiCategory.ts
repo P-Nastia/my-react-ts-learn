@@ -47,6 +47,15 @@ export const apiCategory = createApi({
             },
             invalidatesTags: ['Categories','Category'],
         }),
+        deleteCategory: builder.mutation<void, number>({
+            query: (id) => {
+                return {
+                    url: `${id}`,
+                    method: "DELETE",
+                }
+            },
+            invalidatesTags: ['Categories','Category'],
+        }),
     }),
 });
 
@@ -54,5 +63,6 @@ export const {
     useGetAllCategoriesQuery,
     useEditCategoryMutation,
     useGetCategoryByIdQuery,
-    useCreateCategoryMutation
+    useCreateCategoryMutation,
+    useDeleteCategoryMutation,
 } = apiCategory;
