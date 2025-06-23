@@ -10,12 +10,14 @@ type ImageUploadFormItemProps = {
     name: string;
     label?: string;
     src?:string,
+    setSrc?: (src: string) => void,
 };
 
 const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                                                                      name,
                                                                      label = "Фото",
                                                                      src="",
+                                                                     setSrc,
                                                                  }) => {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -38,6 +40,12 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
         showUploadList: false,
     };
 
+    const handleRemove = () => {
+        setPreviewUrl(null);
+        setSrc?.("");
+        console.log("handleRemove",setSrc);
+    };
+
     return (
         <Form.Item
             label={label}
@@ -47,7 +55,7 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
             }
         >
             <>
-                {!previewUrl ? (
+                {!previewUrl && !src  ? (
                     <Dragger {...props} accept="image/*">
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
@@ -67,7 +75,7 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                         <button
                             type="button"
                             className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full text-red-500 hover:text-red-600"
-                            onClick={() => setPreviewUrl(null)}
+                            onClick={handleRemove}
                         >
                             <CloseCircleFilled className="text-xl" />
                         </button>
