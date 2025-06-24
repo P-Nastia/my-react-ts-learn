@@ -12,10 +12,6 @@ export interface ICategoryCreate
     imageFile: string;
 }
 
-export interface ICategoryDelete {
-    id: number;
-}
-
 export interface ICategoryEdit{
     id: number;
     name: string;
@@ -34,6 +30,11 @@ export interface IUserLogin{
     email: string;
     password: string;
 }
+
+export interface LoginResponse {
+    token: string;
+}
+
 export interface IUserTokenDecode{
     email: string;
     name: string;

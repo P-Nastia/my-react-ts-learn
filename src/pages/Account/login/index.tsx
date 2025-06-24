@@ -1,35 +1,42 @@
-import {Button, Form, type FormProps, Input, message} from "antd";
-import type {IUserLogin, ServerError} from "../../../services/types.ts";
+import {Button, Form, type FormProps, Input} from "antd";
+import type {IUserLogin} from "../../../services/types.ts";
 import {useLoginMutation} from "../../../services/apiAccount.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import Header from "../../../layout/user/Header.tsx"
 import {useNavigate} from "react-router-dom";
+import {useAppDispatch} from "../../../store";
+import {getUserFromToken, loginSuccess} from "../../../store/authSlice.ts";
 
 const LoginPage: React.FC = () => {
+
+    const [login, { isLoading }] = useLoginMutation();
+    const dispatch = useAppDispatch();
+
     const navigate = useNavigate();
-    const [login, {isLoading}] = useLoginMutation();
 
-    const [form] = Form.useForm<IUserLogin>();
-    const setServerErrors = useFormServerErrors(form);
-
-    const onFinish: FormProps<IUserLogin>['onFinish'] = async (values) => {
+    const onFinish: FormProps<IUserLogin>["onFinish"] = async (values) => {
         try {
-            console.log("values",values);
-            const response  = await login(values).unwrap();
-            console.log("response",response);
+            // console.log("Begin login", values);
+            const response = await login(values).unwrap();
+            const {token} = response;
+            dispatch(loginSuccess(token)); // залогінить користувача
 
-                navigate("/");
-
+            const user = getUserFromToken(token);
+            if(!user || !user.roles.includes("Admin")){
+                navigate('/');
+            }
+            else{
+                navigate('/admin/home');
+            }
         } catch (error) {
             console.log("ERROR",error);
-            const serverError = error as ServerError;
-
-            if (serverError?.status === 400 && serverError?.data?.errors) {
-                setServerErrors(serverError.data.errors);
-            } else {
-                message.error("Сталася помилка при авторизації");
-            }
+            // const serverError = error as ServerError;
+            //
+            // if (serverError?.status === 400 && serverError?.data?.errors) {
+            //     setServerErrors(serverError.data.errors);
+            // } else {
+            //     message.error("Сталася помилка при авторизації");
+            // }
         }
     };
 
@@ -68,7 +75,7 @@ const LoginPage: React.FC = () => {
                             </Form.Item>
 
                             <Form.Item label={null}>
-                                <Button type="primary" htmlType="submit">
+                                <Button type="" htmlType="submit">
                                     Login
                                 </Button>
                             </Form.Item>

@@ -1,12 +1,14 @@
 
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
-import {getUser, logout} from "../../utilities/userAccountFunc.ts"
 import {useNavigate} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "../../store";
+import {logout} from "../../store/authSlice.ts";
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
-    const user=getUser();
+    const {user}=useAppSelector(state => state.auth);
+    const dispatch = useAppDispatch();
 
     return (
         <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between items-center">
@@ -23,12 +25,12 @@ const Header: React.FC = () => {
                             alt="User avatar"
                             className="w-8 h-8 rounded-full"
                         />
-                        <div onClick={()=>{logout();navigate("/")}} className="cursor-pointer">
+                        <div onClick={()=>{dispatch(logout());navigate("/")}} className="cursor-pointer">
                             Logout
                         </div>
                     </>
                 ) : (
-                    <Link to="account/login">Login</Link>
+                    <Link to={"login"}>Login</Link>
                 )}
             </div>
         </header>
