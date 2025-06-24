@@ -5,6 +5,13 @@ export interface ICategoryItem {
     image: string;
 }
 
+export interface ICategoryCreate
+{
+    name: string;
+    slug: string;
+    imageFile: string;
+}
+
 export interface ICategoryDelete {
     id: number;
 }
@@ -21,4 +28,15 @@ export interface ServerError {
     data: {
         errors: Record<string, string[]>;
     };
+}
+
+export interface IUserLogin{
+    email: string;
+    password: string;
+}
+export interface IUserTokenDecode{
+    email: string;
+    name: string;
+    image: string;
+    roles: string[];
 }

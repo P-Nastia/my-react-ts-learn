@@ -1,12 +1,11 @@
-import {Link, Outlet} from "react-router";
+import { Outlet} from "react-router";
+import Header from "./Header.tsx"
 
 const UserLayout: React.FC = () => {
+
     return (
         <div className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
-            <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
-                <h1 className="text-xl font-semibold">FoodDelivery</h1>
-                <Link to={"/admin/home"}>Адмінка</Link>
-            </header>
+            <Header />
 
             <main className="flex-1 p-4 md:p-6">
                 <Outlet />

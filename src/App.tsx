@@ -8,6 +8,7 @@ import UserLayout from "./layout/user/UserLayout.tsx";
 import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
 import CategoriesCreatePage from "./pages/Categories/create";
 import CategoriesEditPage from "./pages/Categories/edit";
+import LoginPage from "./pages/Account/login/index.tsx";
 
 const App: React.FC = () => {
   console.log("App rendered");
@@ -20,6 +21,9 @@ const App: React.FC = () => {
               <Route index element={<UserHomePage />} />
             </Route>
 
+            <Route path={"account"}>
+              <Route path={"login"} element={<LoginPage />} />
+            </Route>
 
             <Route path={"admin"} element={<AdminLayout />}>
               <Route path="home" element={<DashboardHome />}/>
