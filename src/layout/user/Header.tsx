@@ -1,13 +1,12 @@
 
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
-import {useContext} from "react";
-import {UserContext} from "../../context/UserContext.tsx";
+import {getUser, logout} from "../../utilities/userAccountFunc.ts"
+import {useNavigate} from "react-router-dom";
 
 const Header: React.FC = () => {
-    const userContext=useContext(UserContext);
-
-    const {user, logout} = userContext;
+    const navigate = useNavigate();
+    const user=getUser();
 
     return (
         <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between items-center">
@@ -24,7 +23,7 @@ const Header: React.FC = () => {
                             alt="User avatar"
                             className="w-8 h-8 rounded-full"
                         />
-                        <div onClick={logout} className="cursor-pointer">
+                        <div onClick={()=>{logout();navigate("/")}} className="cursor-pointer">
                             Logout
                         </div>
                     </>

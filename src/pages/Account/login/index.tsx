@@ -4,16 +4,10 @@ import {useLoginMutation} from "../../../services/apiAccount.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import Header from "../../../layout/user/Header.tsx"
-import { useContext } from "react";
-import { UserContext } from "../../../context/UserContext";
-import {getUser} from "../../../utilities/userAccountFunc.ts";
 import {useNavigate} from "react-router-dom";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
-    const userContext = useContext(UserContext);
-    const { setUser } = userContext;
-
     const [login, {isLoading}] = useLoginMutation();
 
     const [form] = Form.useForm<IUserLogin>();
@@ -24,13 +18,9 @@ const LoginPage: React.FC = () => {
             console.log("values",values);
             const response  = await login(values).unwrap();
             console.log("response",response);
-            if (userContext?.setUser) {
-                console.log("userContext", userContext);
-                const user = getUser();
-                setUser(user);
-                message.success("Logged in successfully");
+
                 navigate("/");
-            }
+
         } catch (error) {
             console.log("ERROR",error);
             const serverError = error as ServerError;
