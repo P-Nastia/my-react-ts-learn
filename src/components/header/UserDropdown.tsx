@@ -8,7 +8,6 @@ import {APP_ENV} from "../../env";
 
 export default function UserDropdown() {
     const { user } = useAppSelector(state=>state.auth);
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -22,7 +21,6 @@ export default function UserDropdown() {
 
     function logoutUser() {
         dispatch(logout());
-        navigate('/');
     }
 
     return (
