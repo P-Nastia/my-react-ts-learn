@@ -31,7 +31,7 @@ export interface IUserLogin{
     password: string;
 }
 
-export interface LoginResponse {
+export interface ILoginResponse {
     token: string;
 }
 
@@ -40,4 +40,13 @@ export interface IUserTokenDecode{
     name: string;
     image: string;
     roles: string[];
+}
+
+export interface IRegister
+{
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    imageFile: string;
 }

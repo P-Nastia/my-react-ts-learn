@@ -2,7 +2,6 @@ import {Button, Form, type FormProps, Input} from "antd";
 import type {IUserLogin} from "../../../services/types.ts";
 import {useLoginMutation} from "../../../services/apiAccount.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import Header from "../../../layout/user/Header.tsx"
 import {useNavigate} from "react-router-dom";
 import {useAppDispatch} from "../../../store";
 import {getUserFromToken, loginSuccess} from "../../../store/authSlice.ts";
@@ -43,7 +42,6 @@ const LoginPage: React.FC = () => {
     return (
         (
             <>
-                <Header/>
                 <div className="flex justify-center items-center min-h-[70vh] px-4">
                     <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white px-6 py-6 shadow-md dark:border-gray-800 dark:bg-gray-900">
                         {isLoading && <LoadingOverlay />}
@@ -75,7 +73,7 @@ const LoginPage: React.FC = () => {
                             </Form.Item>
 
                             <Form.Item label={null}>
-                                <Button type="" htmlType="submit">
+                                <Button  htmlType="submit">
                                     Login
                                 </Button>
                             </Form.Item>
