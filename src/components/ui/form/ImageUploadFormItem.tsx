@@ -9,17 +9,15 @@ const { Dragger } = Upload;
 type ImageUploadFormItemProps = {
     name: string;
     label?: string;
-    src?:string,
-    setSrc?: (src: string) => void,
+    src?:string
 };
 
 const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                                                                      name,
                                                                      label = "Фото",
-                                                                     src="",
-                                                                     setSrc,
+                                                                     src=""
                                                                  }) => {
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(src ?? null);
 
     console.log("src", src);
     console.log("preview", previewUrl);
@@ -40,12 +38,6 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
         showUploadList: false,
     };
 
-    const handleRemove = () => {
-        setPreviewUrl(null);
-        setSrc?.("");
-        console.log("handleRemove",setSrc);
-    };
-
     return (
         <Form.Item
             label={label}
@@ -55,7 +47,7 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
             }
         >
             <>
-                {!previewUrl && !src  ? (
+                {!previewUrl  ? (
                     <Dragger {...props} accept="image/*">
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
@@ -68,14 +60,14 @@ const ImageUploadFormItem: React.FC<ImageUploadFormItemProps> = ({
                 ) : (
                     <div className="relative w-48 h-48 mx-auto border border-dashed border-gray-300 rounded-lg overflow-hidden shadow-md">
                         <img
-                            src={previewUrl?previewUrl:src}
+                            src={previewUrl}
                             alt="Preview"
                             className="w-full h-full object-cover"
                         />
                         <button
                             type="button"
                             className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full text-red-500 hover:text-red-600"
-                            onClick={handleRemove}
+                            onClick={()=>{setPreviewUrl(null)}}
                         >
                             <CloseCircleFilled className="text-xl" />
                         </button>
