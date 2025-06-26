@@ -19,6 +19,7 @@ import {
 } from "antd";
 import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx";
 import DragDropUpload from "../../../../components/ui/images/DragDropUpload.tsx";
+import type {RcFile} from "antd/es/upload";
 
 const {Title} = Typography;
 
@@ -40,18 +41,23 @@ const AdminProductCreatePage: React.FC = () => {
         );
     };
 
-    const onFinish = async (values) => {
+    const onFinish = async (values: IProductCreate) => {
         try {
+            // console.log("values", values);
+            const imageFiles = images
+                .map((f) => f.originFileObj)
+                .filter((f): f is RcFile => f instanceof File);
+
             const dto: IProductCreate = {
                 ...values,
                 ingredientIds,
-                imageFiles: images
-                    .map((f) => f.originFileObj)
-                    .filter((f): f is File => f instanceof File),
+                imageFiles: imageFiles
             };
 
+            // console.log("Pera", dto);
             await createProduct(dto).unwrap();
             navigate('/admin/products');
+
         } catch (err) {
             console.error(err);
             message.error("Помилка створення продукту");
