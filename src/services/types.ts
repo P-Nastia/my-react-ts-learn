@@ -35,13 +35,6 @@ export interface ILoginResponse {
     token: string;
 }
 
-export interface IUserTokenDecode{
-    email: string;
-    name: string;
-    image: string;
-    roles: string[];
-}
-
 export interface IRegister
 {
     firstName: string;
@@ -49,4 +42,45 @@ export interface IRegister
     email: string;
     password: string;
     imageFile: string;
+}
+
+
+export interface ProductSizeModel {
+    id: number;
+    name: string;
+}
+
+export interface ProductIngredientModel {
+    id: number;
+    name: string;
+    image: string;
+}
+
+export interface ProductImageModel {
+    id: number;
+    name: string;
+    priority: number;
+}
+
+export interface ProductItemModel {
+    id: number;
+    name: string;
+    slug: string;
+    price: number;
+    weight: number;
+    category?: ICategoryItem;
+    productSize?: ProductSizeModel;
+    productIngredients?: ProductIngredientModel[];
+    productImages?: ProductImageModel[];
+}
+
+export interface IProductCreate {
+    name: string;
+    slug: string;
+    price: number;
+    weight: number;
+    categoryId: number;
+    productSizeId: number;
+    ingredientIds?: number[];
+    imageFiles?: File[];
 }

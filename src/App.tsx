@@ -11,6 +11,7 @@ import CategoriesEditPage from "./pages/Categories/edit";
 import LoginPage from "./pages/Account/login";
 import RequireAdmin from "./components/protectedRoute/requireAdmin.tsx";
 import RegistrationPage from "./pages/Account/register";
+import ProductsPage from "./pages/Product/list";
 
 const App: React.FC = () => {
 
@@ -24,6 +25,7 @@ const App: React.FC = () => {
 
               <Route path={'login'} element={<LoginPage/>} />
               <Route path="register" element={<RegistrationPage />} />
+              <Route path="products" element={<ProductsPage/>}/>
             </Route>
 
             <Route path="admin" element={<RequireAdmin/>}>
