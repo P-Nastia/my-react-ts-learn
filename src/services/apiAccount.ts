@@ -7,9 +7,22 @@ export interface IForgotPasswordRequest {
     email: string;
 }
 
+export interface IValidateTokenRequest {
+    token: string;
+    email: string;
+}
+
+export  interface IResetPasswordRequest {
+    newPassword: string;
+    token: string;
+    email: string;
+}
+
+
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('account'),
+    tagTypes:['Account'],
     endpoints: (builder) => ({
         login: builder.mutation<ILoginResponse, IUserLogin>({
             query: (credentials) => ({
@@ -36,28 +49,29 @@ export const apiAccount = createApi({
             },
         }),
         // запуск процедури відновлння паролю по пошті
-        forgotPassword: builder.mutation<IForgotPasswordRequest,void>({
+        forgotPassword: builder.mutation<void, IForgotPasswordRequest>({
             query: (data) => ({
                 url: 'forgotPassword',
                 method: 'POST',
-                body: {data},
-            }),
+                body: data
+            })
         }),
         // перевірка чи дійсний токен
-        validateResetToken: builder.mutation<{token: string},boolean>({
-            query: (token) => ({
+        validateResetToken: builder.query<{ isValid: boolean }, IValidateTokenRequest>({
+            query: (params) => ({
                 url: 'validateResetToken',
-                method: 'POST',
-                body: {token},
+                params, // це додасть параметри як query string: ?token=abc&email=...
             }),
+            providesTags: ['Account'],
         }),
+
         // встановлення нового паролю
-        resetPassword: builder.mutation<{password: string},void>({
-            query: (password) => ({
+        resetPassword: builder.mutation<void, IResetPasswordRequest>({
+            query: (data) => ({
                 url: 'resetPassword',
                 method: 'POST',
-                body: {password},
-            }),
+                body: data
+            })
         }),
     }),
 });
@@ -68,5 +82,5 @@ export const {
     useRegisterMutation,
     useForgotPasswordMutation,
     useResetPasswordMutation,
-    useValidateResetTokenMutation,
+    useValidateResetTokenQuery,
 } = apiAccount;

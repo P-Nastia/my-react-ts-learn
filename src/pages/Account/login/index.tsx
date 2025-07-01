@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Form, type FormProps, Input } from 'antd';
-import {type ILoginRequest, useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
+import {useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
+import {type IUserLogin} from "../../../services/types.ts";
 import {getUserFromToken, loginSuccess} from "../../../store/authSlice.ts";
 import {useAppDispatch} from "../../../store";
 
@@ -21,7 +22,7 @@ const LoginPage: React.FC = () => {
     // const [form] = Form.useForm<ILogin>();
     // const setServerErrors = useFormServerErrors(form);
 
-    const onFinish: FormProps<ILoginRequest>["onFinish"] = async (values) => {
+    const onFinish: FormProps<IUserLogin>["onFinish"] = async (values) => {
         try {
             const response = await login(values).unwrap();
             const { token } = response;
@@ -68,11 +69,11 @@ const LoginPage: React.FC = () => {
                 {(isLoginLoading || isGoogleLoading)  && <LoadingOverlay />}
 
                 <h2 className="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
-                <Form<ILoginRequest>
+                <Form<IUserLogin>
                     layout="vertical"
                     onFinish={onFinish}
                 >
-                    <Form.Item<ILoginRequest>
+                    <Form.Item<IUserLogin>
                         name="email"
                         label="Email"
                         rules={[{required: true, message: "Enter your email"}]}
@@ -80,7 +81,7 @@ const LoginPage: React.FC = () => {
                         <Input type="email" placeholder="you@example.com"/>
                     </Form.Item>
 
-                    <Form.Item<ILoginRequest>
+                    <Form.Item<IUserLogin>
                         name="password"
                         label="Password"
                         rules={[{required: true, message: "Enter your password"}]}

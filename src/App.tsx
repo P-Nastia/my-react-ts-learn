@@ -15,6 +15,8 @@ import ProductsPage from "./pages/Product/list";
 import AdminProductListPage from "./admin/pages/Products/list/adminProductsListPage.tsx";
 import AdminProductCreatePage from "./admin/pages/Products/list/adminProductCreatePage.tsx";
 import ForgotPasswordPage from "./pages/Account/forgotPassword";
+import ForgotSuccessPage from "./pages/Account/forgotSucces";
+import {ResetPasswordPage} from "./pages/Account/resetPassword";
 
 const App: React.FC = () => {
 
@@ -28,6 +30,8 @@ const App: React.FC = () => {
 
               <Route path={'login'} element={<LoginPage/>} />
               <Route path={'forgot-password'} element={<ForgotPasswordPage/>} />
+              <Route path={'forgot-success'} element={<ForgotSuccessPage/>} />
+              <Route path={'reset-password'} element={<ResetPasswordPage/>} />
               <Route path="register" element={<RegistrationPage />} />
               <Route path="products" element={<ProductsPage/>}/>
             </Route>
