@@ -1,89 +1,119 @@
-import {Button, Form, type FormProps, Input} from "antd";
-import type {IUserLogin} from "../../../services/types.ts";
-import {useLoginMutation} from "../../../services/apiAccount.ts";
-import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useNavigate} from "react-router-dom";
-import {useAppDispatch} from "../../../store";
+import { useNavigate } from 'react-router-dom';
+import { Form, type FormProps, Input } from 'antd';
+import {type ILoginRequest, useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
 import {getUserFromToken, loginSuccess} from "../../../store/authSlice.ts";
+import {useAppDispatch} from "../../../store";
+
+import { useGoogleLogin } from '@react-oauth/google';
+import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import {Link} from "react-router";
+// import type {ServerError} from "../../../services/types.ts";
+
+
 
 const LoginPage: React.FC = () => {
+    const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+    const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
 
-    const [login, { isLoading }] = useLoginMutation();
     const dispatch = useAppDispatch();
-
     const navigate = useNavigate();
 
-    const onFinish: FormProps<IUserLogin>["onFinish"] = async (values) => {
+    // const [form] = Form.useForm<ILogin>();
+    // const setServerErrors = useFormServerErrors(form);
+
+    const onFinish: FormProps<ILoginRequest>["onFinish"] = async (values) => {
         try {
-            // console.log("Begin login", values);
             const response = await login(values).unwrap();
-            const {token} = response;
-            dispatch(loginSuccess(token)); // залогінить користувача
+            const { token } = response;
+            dispatch(loginSuccess(token));
 
             const user = getUserFromToken(token);
-            if(!user || !user.roles.includes("Admin")){
+            console.log("user", user);
+            if (!user || !user.roles.includes("Admin")) {
                 navigate('/');
             }
-            else{
+            else {
                 navigate('/admin/home');
             }
-        } catch (error) {
-            console.log("ERROR",error);
-            // const serverError = error as ServerError;
-            //
-            // if (serverError?.status === 400 && serverError?.data?.errors) {
-            //     setServerErrors(serverError.data.errors);
-            // } else {
-            //     message.error("Сталася помилка при авторизації");
-            // }
+        } catch (err) {
+            console.log("error", err);
+            alert("Login failed");
         }
     };
 
+    const loginUseGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) =>
+        {
+            try {
+                const result = await loginByGoogle(tokenResponse.access_token).unwrap();
+                dispatch(loginSuccess(result.token));
+                navigate('/');
+            } catch (error) {
+
+                console.log("User server error auth", error);
+                // const serverError = error as ServerError;
+                //
+                // if (serverError?.status === 400 && serverError?.data?.errors) {
+                //     // setServerErrors(serverError.data.errors);
+                // } else {
+                //     message.error("Сталася помилка при вході");
+                // }
+            }
+        },
+    });
+
     return (
-        (
-            <>
-                <div className="flex justify-center items-center min-h-[70vh] px-4">
-                    <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white px-6 py-6 shadow-md dark:border-gray-800 dark:bg-gray-900">
-                        {isLoading && <LoadingOverlay />}
+        <div className="min-h-full flex items-center justify-center bg-gray-100">
+            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+                {(isLoginLoading || isGoogleLoading)  && <LoadingOverlay />}
 
-                        <h1 className="text-2xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
-                            Вхід до акаунту
-                        </h1>
+                <h2 className="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
+                <Form<ILoginRequest>
+                    layout="vertical"
+                    onFinish={onFinish}
+                >
+                    <Form.Item<ILoginRequest>
+                        name="email"
+                        label="Email"
+                        rules={[{required: true, message: "Enter your email"}]}
+                    >
+                        <Input type="email" placeholder="you@example.com"/>
+                    </Form.Item>
 
-                        <Form
-                            labelCol={{ span: 24 }}
-                            wrapperCol={{ span: 24 }}
-                            layout="vertical"
-                            onFinish={onFinish}
-                        >
-                            <Form.Item<IUserLogin>
-                                label="Пошта"
-                                name="email"
-                                rules={[{ required: true, message: "Вкажіть пошту" }]}
-                            >
-                                <Input placeholder="Введіть адресу пошти" />
-                            </Form.Item>
+                    <Form.Item<ILoginRequest>
+                        name="password"
+                        label="Password"
+                        rules={[{required: true, message: "Enter your password"}]}
+                    >
+                        <Input.Password placeholder="••••••••"/>
+                    </Form.Item>
 
-                            <Form.Item<IUserLogin>
-                                label="Пароль"
-                                name="password"
-                                rules={[{ required: true, message: "Вкажіть пароль" }]}
-                            >
-                                <Input.Password placeholder="Введіть пароль" />
-                            </Form.Item>
-
-                            <Form.Item label={null}>
-                                <Button  htmlType="submit">
-                                    Login
-                                </Button>
-                            </Form.Item>
-                        </Form>
+                    <div className="flex justify-end">
+                        <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                            Забули пароль?
+                        </Link>
                     </div>
-                </div>
-            </>
 
-        )
+                    <button
+                        type="submit"
+                        className="bg-orange-500 hover:bg-orange-600 transition text-white font-semibold px-4 py-2 rounded w-full mt-4"
+                    >
+                        {isLoginLoading ? 'Logging in...' : 'Login'}
+                    </button>
+
+                    <button
+                        onClick={(event) => {
+                            event.preventDefault();
+                            loginUseGoogle();
+                        }}
+                        className="bg-blue-500 hover:bg-blue-600 transition text-white font-semibold px-4 py-2 rounded w-full mt-4"
+                    >
+                        {'LoginGoogle'}
+                    </button>
+                </Form>
+            </div>
+        </div>
     );
-}
+};
 
 export default LoginPage;

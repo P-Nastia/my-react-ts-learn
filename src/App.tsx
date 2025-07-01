@@ -14,6 +14,7 @@ import RegistrationPage from "./pages/Account/register";
 import ProductsPage from "./pages/Product/list";
 import AdminProductListPage from "./admin/pages/Products/list/adminProductsListPage.tsx";
 import AdminProductCreatePage from "./admin/pages/Products/list/adminProductCreatePage.tsx";
+import ForgotPasswordPage from "./pages/Account/forgotPassword";
 
 const App: React.FC = () => {
 
@@ -26,6 +27,7 @@ const App: React.FC = () => {
               <Route index element={<UserHomePage/>}/>
 
               <Route path={'login'} element={<LoginPage/>} />
+              <Route path={'forgot-password'} element={<ForgotPasswordPage/>} />
               <Route path="register" element={<RegistrationPage />} />
               <Route path="products" element={<ProductsPage/>}/>
             </Route>
