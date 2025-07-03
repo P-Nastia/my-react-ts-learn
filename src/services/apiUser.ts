@@ -12,8 +12,13 @@ export interface IAdminUser{
 }
 
 export interface ISearchUsers{
-    currentPage: number;
-    itemsPerPage: number;
+    paginationRequest: {
+        currentPage: number;
+        itemsPerPage: number;
+    };
+    name: string;
+    email: string;
+    roles: string[];
 }
 
 export interface IPaginationUsersResponse{

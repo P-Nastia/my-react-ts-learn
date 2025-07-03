@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Space, Table, Tag} from 'antd';
+import {Avatar, Checkbox, Divider, Input, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import type {IAdminUser, ISearchUsers} from "../../../services/apiUser.ts";
 import {APP_ENV} from "../../../env";
@@ -10,19 +10,43 @@ import {useSearchParams} from "react-router";
 const AdminUsersPage: React.FC = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const allRoles = ['Admin', 'User'];
 
-    const pagination: ISearchUsers = {
-        currentPage: parseInt(searchParams.get("page") || "1", 10),
-        itemsPerPage: parseInt(searchParams.get("itemsPerPage") || "5", 10),
+    const search: ISearchUsers = {
+        paginationRequest: {
+            currentPage: parseInt(searchParams.get('page') || '1', 10),
+            itemsPerPage: parseInt(searchParams.get('itemsPerPage') || '5', 10),
+        },
+        name: searchParams.get('name') || '',
+        email: searchParams.get('email') || '',
+        roles: searchParams.get('roles')?.split(',').filter(r => r) || [],
     };
 
-    const { data, isLoading } = useGetSearchUsersQuery(pagination);
+    const { data, isLoading } = useGetSearchUsersQuery(search);
 
+    console.log("DATA",data)
 
-    const handlePageChange = (newPage: number) => {
-        setSearchParams({
-            page: String(newPage),
-            itemsPerPage: String(pagination.itemsPerPage),
+    const handlePageChange = (page: number, pageSize?: number) => {
+        setSearchParams(prev => ({
+            ...Object.fromEntries(prev.entries()),
+            page: String(page),
+            itemsPerPage: String(pageSize || search.paginationRequest.itemsPerPage),
+        }));
+    };
+
+    const handleFilterChange = (key: string, value: string | string[]) => {
+        setSearchParams(prev => {
+            const updated = {
+                ...Object.fromEntries(prev.entries()),
+                page: '1',
+                [key]: Array.isArray(value) ? value.join(',') : value,
+            };
+
+            if (!value || (Array.isArray(value) && value.length === 0)) {
+                delete updated[key];
+            }
+
+            return updated;
         });
     };
 
@@ -112,10 +136,31 @@ const AdminUsersPage: React.FC = () => {
     return (
         <>
             {isLoading && <LoadingOverlay/>}
+            <Space style={{ marginBottom: 16 }}>
+                <Input
+                    placeholder="Search by name"
+                    value={search.name}
+                    onChange={(e) => handleFilterChange('name', e.target.value)}
+                    style={{ width: 200 }}
+                />
+                <Input
+                    placeholder="Search by email"
+                    value={search.email}
+                    onChange={(e) => handleFilterChange('email', e.target.value)}
+                    style={{ width: 200 }}
+                />
+                <Divider>Filter by Roles</Divider>
+                <Checkbox.Group
+                    options={allRoles}
+                    value={search.roles}
+                    onChange={(checkedValues) => handleFilterChange('roles', checkedValues as string[])}
+                />
+
+            </Space>
             <Table<IAdminUser> columns={columns} dataSource={data?.users}
                                pagination={{
-                current: pagination.currentPage,
-                pageSize: pagination.itemsPerPage,
+                current: search.paginationRequest.currentPage,
+                pageSize: search.paginationRequest.itemsPerPage,
                 total: data?.pagination.totalAmount,
                 onChange: handlePageChange,
                 position: ['bottomCenter'],
