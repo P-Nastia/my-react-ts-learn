@@ -17,6 +17,7 @@ import AdminProductCreatePage from "./admin/pages/Products/list/adminProductCrea
 import ForgotPasswordPage from "./pages/Account/forgotPassword";
 import ForgotSuccessPage from "./pages/Account/forgotSucces";
 import {ResetPasswordPage} from "./pages/Account/resetPassword";
+import AdminUsersPage from "./admin/pages/Users";
 
 const App: React.FC = () => {
 
@@ -51,6 +52,12 @@ const App: React.FC = () => {
                   <Route path={'create'} element={<AdminProductCreatePage/>}/>
 
                 </Route>
+
+                <Route path="users">
+                  <Route index element={<AdminUsersPage/>}/>
+
+                </Route>
+
               </Route>
             </Route>
 
