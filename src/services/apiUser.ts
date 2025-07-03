@@ -11,6 +11,21 @@ export interface IAdminUser{
     loginTypes: string[];
 }
 
+export interface ISearchUsers{
+    currentPage: number;
+    itemsPerPage: number;
+}
+
+export interface IPaginationUsersResponse{
+    currentPage: number;
+    totalAmount: number;
+}
+
+export interface ISearchResponse{
+    users: IAdminUser[];
+    pagination: IPaginationUsersResponse
+}
+
 export const apiUser = createApi({
     reducerPath: 'api/users',
     baseQuery: createBaseQuery('users'),
@@ -20,10 +35,18 @@ export const apiUser = createApi({
             query: () => 'list',
             providesTags: ['Users'],
         }),
-
+        getSearchUsers: builder.query<ISearchResponse, ISearchUsers>({
+            query: (data) => ({
+                url: 'search',
+                method: 'POST',
+                body: data
+            }),
+            providesTags: ['Users'],
+        }),
     }),
 });
 
 export const {
-    useGetAllUsersQuery
+    useGetAllUsersQuery,
+    useGetSearchUsersQuery,
 } = apiUser;

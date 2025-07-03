@@ -1,13 +1,30 @@
 import React from 'react';
 import {Avatar, Space, Table, Tag} from 'antd';
 import type { TableProps } from 'antd';
-import type {IAdminUser} from "../../../services/apiUser.ts";
+import type {IAdminUser, ISearchUsers} from "../../../services/apiUser.ts";
 import {APP_ENV} from "../../../env";
-import {useGetAllUsersQuery} from "../../../services/apiUser.ts";
+import {useGetSearchUsersQuery} from "../../../services/apiUser.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import {useSearchParams} from "react-router";
 
 const AdminUsersPage: React.FC = () => {
-    const {data, isLoading} = useGetAllUsersQuery();
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const pagination: ISearchUsers = {
+        currentPage: parseInt(searchParams.get("page") || "1", 10),
+        itemsPerPage: parseInt(searchParams.get("itemsPerPage") || "5", 10),
+    };
+
+    const { data, isLoading } = useGetSearchUsersQuery(pagination);
+
+
+    const handlePageChange = (newPage: number) => {
+        setSearchParams({
+            page: String(newPage),
+            itemsPerPage: String(pagination.itemsPerPage),
+        });
+    };
 
     const columns: TableProps<IAdminUser>['columns'] = [
         {
@@ -95,7 +112,14 @@ const AdminUsersPage: React.FC = () => {
     return (
         <>
             {isLoading && <LoadingOverlay/>}
-            <Table<IAdminUser> columns={columns} dataSource={data}/>
+            <Table<IAdminUser> columns={columns} dataSource={data?.users}
+                               pagination={{
+                current: pagination.currentPage,
+                pageSize: pagination.itemsPerPage,
+                total: data?.pagination.totalAmount,
+                onChange: handlePageChange,
+                position: ['bottomCenter'],
+            }}/>
         </>
 
     );
