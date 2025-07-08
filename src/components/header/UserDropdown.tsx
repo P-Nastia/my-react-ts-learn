@@ -1,6 +1,5 @@
 import {Dropdown} from "../ui/dropdown/Dropdown.tsx";
 import {DropdownItem} from "../ui/dropdown/DropdownItem.tsx";
-import {useNavigate} from "react-router";
 import {useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../store";
 import {logout} from "../../store/authSlice.ts";

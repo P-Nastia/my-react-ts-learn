@@ -9,6 +9,8 @@ import {Link, useSearchParams} from "react-router";
 const { RangePicker } = DatePicker;
 import dayjs from 'dayjs';
 import CustomPagination from "../../../components/ui/pagination";
+import type { RangePickerProps } from 'antd/es/date-picker';
+
 
 const AdminUsersPage: React.FC = () => {
 
@@ -55,9 +57,9 @@ const AdminUsersPage: React.FC = () => {
         });
     };
 
-    const handleDateChange = (dates: null | [dayjs.Dayjs, dayjs.Dayjs]) => {
-        if (!dates) {
 
+    const handleDateChange: RangePickerProps['onChange'] = (dates) => {
+        if (!dates || !dates[0] || !dates[1]) {
             setSearchParams(prev => {
                 const params = Object.fromEntries(prev.entries());
                 delete params.startDate;
@@ -66,11 +68,10 @@ const AdminUsersPage: React.FC = () => {
                 return params;
             });
         } else {
-
             setSearchParams(prev => ({
                 ...Object.fromEntries(prev.entries()),
-                startDate: dates[0].toISOString(),
-                endDate: dates[1].toISOString(),
+                startDate: dates[0]!.toISOString(),
+                endDate: dates[1]!.toISOString(),
                 page: '1',
             }));
         }

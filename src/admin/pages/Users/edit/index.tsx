@@ -8,8 +8,8 @@ import {type IEditUser, useEditUserMutation, useGetUserByIdQuery} from "../../..
 const AdminUserEditPage: React.FC = () => {
     const navigate = useNavigate();
 
-    const params = useParams<{ id: number }>();
-    const id = params.id || 0;
+    const params = useParams<{ id: string }>();
+    const id = Number(params.id) || 0;
     console.log("ID",id);
 
     const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useGetUserByIdQuery(id);
