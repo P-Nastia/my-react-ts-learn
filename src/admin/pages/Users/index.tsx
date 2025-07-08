@@ -8,6 +8,7 @@ import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 import {Link, useSearchParams} from "react-router";
 const { RangePicker } = DatePicker;
 import dayjs from 'dayjs';
+import CustomPagination from "../../../components/ui/pagination";
 
 const AdminUsersPage: React.FC = () => {
 
@@ -198,15 +199,12 @@ const AdminUsersPage: React.FC = () => {
             </Space>
 
             <Table<IAdminUser> columns={columns} dataSource={data?.users}
-                               pagination={{
-                current: search.paginationRequest.currentPage,
-                pageSize: search.paginationRequest.itemsPerPage,
-                total: data?.pagination.totalAmount,
-                onChange: handlePageChange,
-                pageSizeOptions: [5,10,15,20],
-                position: ['bottomCenter']
-            }}
+                               pagination={false}
             />
+            <CustomPagination currentPage={search.paginationRequest.currentPage}
+                              totalItems={data?.pagination.totalAmount || 0}
+                              itemsPerPage={search.paginationRequest.itemsPerPage}
+                              onPageChange={handlePageChange}></CustomPagination>
         </>
 
     );
