@@ -1,5 +1,6 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
+import {serialize} from "object-to-formdata";
 
 export interface IAdminUser{
     id: number;
@@ -8,7 +9,8 @@ export interface IAdminUser{
     fullName: string;
     dateCreated: string;
     roles: string[];
-    loginTypes: string[];
+    isLoginGoogle: boolean;
+    isLoginPassword: boolean;
 }
 
 export interface ISearchUsers{
@@ -19,6 +21,8 @@ export interface ISearchUsers{
     name: string;
     email: string;
     roles: string[];
+    startDate?: string;
+    endDate?: string;
 }
 
 export interface IPaginationUsersResponse{
@@ -31,10 +35,18 @@ export interface ISearchResponse{
     pagination: IPaginationUsersResponse
 }
 
+export interface IEditUser{
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    roles: string[];
+}
+
 export const apiUser = createApi({
     reducerPath: 'api/users',
     baseQuery: createBaseQuery('users'),
-    tagTypes: ['Users'],
+    tagTypes: ['Users',"User"],
     endpoints: (builder) => ({
         getAllUsers: builder.query<IAdminUser[], void>({
             query: () => 'list',
@@ -48,10 +60,31 @@ export const apiUser = createApi({
             }),
             providesTags: ['Users'],
         }),
+        getUserById: builder.query<IAdminUser, number>({
+            query: (id) => `${id}`,
+            providesTags:['User']
+        }),
+        editUser: builder.mutation<IAdminUser, IEditUser>({
+            query: (user) => {
+                try {
+                    const formData = serialize(user);
+                    return {
+                        url: 'edit',
+                        method: 'PUT',
+                        body: formData,
+                    };
+                } catch {
+                    throw new Error('Error edit user');
+                }
+            },
+            invalidatesTags: ['User','Users'],
+        }),
     }),
 });
 
 export const {
     useGetAllUsersQuery,
     useGetSearchUsersQuery,
+    useEditUserMutation,
+    useGetUserByIdQuery,
 } = apiUser;

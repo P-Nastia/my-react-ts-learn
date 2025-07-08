@@ -1,11 +1,13 @@
 import React from 'react';
-import {Avatar, Checkbox, Divider, Input, Space, Table, Tag } from 'antd';
+import {Avatar, Checkbox, Divider, Input, Space, Table, Tag, DatePicker } from 'antd';
 import type { TableProps } from 'antd';
 import type {IAdminUser, ISearchUsers} from "../../../services/apiUser.ts";
 import {APP_ENV} from "../../../env";
 import {useGetSearchUsersQuery} from "../../../services/apiUser.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useSearchParams} from "react-router";
+import {Link, useSearchParams} from "react-router";
+const { RangePicker } = DatePicker;
+import dayjs from 'dayjs';
 
 const AdminUsersPage: React.FC = () => {
 
@@ -20,6 +22,8 @@ const AdminUsersPage: React.FC = () => {
         name: searchParams.get('name') || '',
         email: searchParams.get('email') || '',
         roles: searchParams.get('roles')?.split(',').filter(r => r) || [],
+        startDate: searchParams.get("startDate") || undefined,
+        endDate: searchParams.get("endDate") || undefined,
     };
 
     const { data, isLoading } = useGetSearchUsersQuery(search);
@@ -50,6 +54,27 @@ const AdminUsersPage: React.FC = () => {
         });
     };
 
+    const handleDateChange = (dates: null | [dayjs.Dayjs, dayjs.Dayjs]) => {
+        if (!dates) {
+
+            setSearchParams(prev => {
+                const params = Object.fromEntries(prev.entries());
+                delete params.startDate;
+                delete params.endDate;
+                params.page = '1';
+                return params;
+            });
+        } else {
+
+            setSearchParams(prev => ({
+                ...Object.fromEntries(prev.entries()),
+                startDate: dates[0].toISOString(),
+                endDate: dates[1].toISOString(),
+                page: '1',
+            }));
+        }
+    };
+
     const columns: TableProps<IAdminUser>['columns'] = [
         {
             title: 'Id',
@@ -77,6 +102,7 @@ const AdminUsersPage: React.FC = () => {
             title: 'Date Created',
             dataIndex: 'dateCreated',
             key: 'dateCreated',
+            render: (date) => <a>{new Date(date).toLocaleDateString()}</a>
         },
         {
             title: 'Roles',
@@ -104,33 +130,31 @@ const AdminUsersPage: React.FC = () => {
             title: 'Login Types',
             key: 'loginTypes',
             dataIndex: 'loginTypes',
-            render: (_, {loginTypes}) => (
+            render: (_, {isLoginPassword,isLoginGoogle}) => (
                 <>
-                    {loginTypes.map((loginType) => {
-                        let color;
-                        if (loginType === 'Google') {
-                            color = 'volcano';
-                        } else {
-                            color = 'green'
-                        }
-                        return (
-                            <Tag color={color} key={loginType}>
-                                {loginType.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
+                    {isLoginPassword?  (
+                        <Tag color={'green'} key={"Password"}>
+                {"Password".toUpperCase()}
+                </Tag>
+            ) : <></>}
+                    {isLoginGoogle?  (
+                        <Tag color={'green'} key={"Password"}>
+                            {"Password".toUpperCase()}
+                        </Tag>
+                    ) : <></>}
+
                 </>
             ),
         },
         {
             title: 'Action',
-            key: 'action',
-            render: () => (
+            key: 'id',
+            render: (_, record) => (
                 <Space size="middle">
-                    <a>Edit</a>
+                    <Link to={`edit/${record.id}`}>Edit</Link>
                     <a>Delete</a>
                 </Space>
-            ),
+            )
         },
     ];
     return (
@@ -156,15 +180,33 @@ const AdminUsersPage: React.FC = () => {
                     onChange={(checkedValues) => handleFilterChange('roles', checkedValues as string[])}
                 />
 
+                <div className="flex flex-col">
+                    <label htmlFor="dateRange" className="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Діапазон дат створення
+                    </label>
+                    <RangePicker
+                        id="dateRange"
+                        className="dark:bg-gray-800 dark:text-white"
+                        onChange={handleDateChange}
+                        value={
+                            search.startDate && search.endDate
+                                ? [dayjs(search.startDate), dayjs(search.endDate)]
+                                : null
+                        }
+                    />
+                </div>
             </Space>
+
             <Table<IAdminUser> columns={columns} dataSource={data?.users}
                                pagination={{
                 current: search.paginationRequest.currentPage,
                 pageSize: search.paginationRequest.itemsPerPage,
                 total: data?.pagination.totalAmount,
                 onChange: handlePageChange,
-                position: ['bottomCenter'],
-            }}/>
+                pageSizeOptions: [5,10,15,20],
+                position: ['bottomCenter']
+            }}
+            />
         </>
 
     );
