@@ -43,7 +43,7 @@ const CustomPagination: React.FC<{
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 20 }}>
-            <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}></button>
+            <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>⬅️</button>
 
             {pageItems.map((item, index) =>
                 item.type === 'page' ? (
@@ -79,7 +79,7 @@ const CustomPagination: React.FC<{
                 )
             )}
 
-            <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}> </button>
+            <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}> ➡️ </button>
         </div>
     );
 };

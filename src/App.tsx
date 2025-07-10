@@ -1,73 +1,153 @@
-import './App.css'
-import {BrowserRouter as Router, Route, Routes} from "react-router";
-import UserLayout from "./layout/user/UserLayout.tsx";
-import UserHomePage from "./pages/OtherPage/UserHomePage.tsx";
-import AdminLayout from "./layout/admin/AdminLayout.tsx";
-import DashboardHome from "./pages/Dashboard/DashboardHome.tsx";
-import CategoriesListPage from "./pages/Categories";
-import NotFound from "./pages/OtherPage/NotFound.tsx";
-import CategoriesCreatePage from "./pages/Categories/create";
-import CategoriesEditPage from "./pages/Categories/edit";
-import LoginPage from "./pages/Account/login";
+import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router";
+import React from "react";
+
+// Auth check
 import RequireAdmin from "./components/protectedRoute/requireAdmin.tsx";
-import RegistrationPage from "./pages/Account/register";
-import ProductsPage from "./pages/Product/list";
-import AdminProductListPage from "./admin/pages/Products/list/adminProductsListPage.tsx";
-import AdminProductCreatePage from "./admin/pages/Products/list/adminProductCreatePage.tsx";
-import ForgotPasswordPage from "./pages/Account/forgotPassword";
-import ForgotSuccessPage from "./pages/Account/forgotSucces";
-import {ResetPasswordPage} from "./pages/Account/resetPassword";
-import AdminUsersPage from "./admin/pages/Users";
-import AdminUserEditPage from "./admin/pages/Users/edit";
+
+// Lazy-loaded layouts
+const UserLayout = React.lazy(() => import("./layout/user/UserLayout.tsx"));
+const AdminLayout = React.lazy(() => import("./layout/admin/AdminLayout.tsx"));
+
+// Lazy-loaded pages
+const UserHomePage = React.lazy(() => import("./pages/OtherPage/UserHomePage.tsx"));
+const LoginPage = React.lazy(() => import("./pages/Account/login/index.tsx"));
+const ForgotPasswordPage = React.lazy(() => import("./pages/Account/forgotPassword/index.tsx"));
+const ForgotSuccessPage = React.lazy(() => import("./pages/Account/forgotSucces/index.tsx"));
+const ResetPasswordPage = React.lazy(() => import("./pages/Account/resetPassword/index.tsx"));
+const RegistrationPage = React.lazy(() => import("./pages/Account/register/index.tsx"));
+const ProductsPage = React.lazy(() => import("./pages/Product/list"));
+const NotFound = React.lazy(() => import("./pages/OtherPage/NotFound.tsx"));
+
+const DashboardHome = React.lazy(() => import("./pages/Dashboard/DashboardHome.tsx"));
+
+const CategoriesListPage = React.lazy(() => import("./pages/Categories"));
+const CategoriesCreatePage = React.lazy(() => import("./pages/Categories/create"));
+const CategoriesEditPage = React.lazy(() => import("./pages/Categories/edit"));
+
+const AdminProductListPage = React.lazy(() => import("./admin/pages/Products/list/adminProductsListPage.tsx"));
+const AdminProductCreatePage = React.lazy(() => import("./admin/pages/Products/list/adminProductCreatePage.tsx"));
+
+const AdminUsersPage = React.lazy(() => import("./admin/pages/Users"));
+const AdminUserEditPage = React.lazy(() => import("./admin/pages/Users/edit"));
 
 const App: React.FC = () => {
-
   return (
-      <>
-        <Router>
-          <Routes>
+      <Router>
+        <Routes>
 
-            <Route path="/" element={<UserLayout/>}>
-              <Route index element={<UserHomePage/>}/>
+          {/* User Routes */}
+          <Route path="/" element={
+            <React.Suspense fallback={<>...</>}>
+              <UserLayout />
+            </React.Suspense>
+          }>
+            <Route index element={
+              <React.Suspense fallback={<>...</>}>
+                <UserHomePage />
+              </React.Suspense>
+            } />
+            <Route path="login" element={
+              <React.Suspense fallback={<>...</>}>
+                <LoginPage />
+              </React.Suspense>
+            } />
+            <Route path="forgot-password" element={
+              <React.Suspense fallback={<>...</>}>
+                <ForgotPasswordPage />
+              </React.Suspense>
+            } />
+            <Route path="forgot-success" element={
+              <React.Suspense fallback={<>...</>}>
+                <ForgotSuccessPage />
+              </React.Suspense>
+            } />
+            <Route path="reset-password" element={
+              <React.Suspense fallback={<>...</>}>
+                <ResetPasswordPage />
+              </React.Suspense>
+            } />
+            <Route path="register" element={
+              <React.Suspense fallback={<>...</>}>
+                <RegistrationPage />
+              </React.Suspense>
+            } />
+            <Route path="products" element={
+              <React.Suspense fallback={<>...</>}>
+                <ProductsPage />
+              </React.Suspense>
+            } />
+          </Route>
 
-              <Route path={'login'} element={<LoginPage/>} />
-              <Route path={'forgot-password'} element={<ForgotPasswordPage/>} />
-              <Route path={'forgot-success'} element={<ForgotSuccessPage/>} />
-              <Route path={'reset-password'} element={<ResetPasswordPage/>} />
-              <Route path="register" element={<RegistrationPage />} />
-              <Route path="products" element={<ProductsPage/>}/>
-            </Route>
+          {/* Admin Routes */}
+          <Route path="admin" element={<RequireAdmin />}>
+            <Route element={
+              <React.Suspense fallback={<>...</>}>
+                <AdminLayout />
+              </React.Suspense>
+            }>
+              <Route path="home" element={
+                <React.Suspense fallback={<>...</>}>
+                  <DashboardHome />
+                </React.Suspense>
+              } />
 
-            <Route path="admin" element={<RequireAdmin/>}>
-              <Route element={<AdminLayout/>}>
-                <Route path="home" element={<DashboardHome/>}/>
+              <Route path="categories">
+                <Route index element={
+                  <React.Suspense fallback={<>...</>}>
+                    <CategoriesListPage />
+                  </React.Suspense>
+                } />
+                <Route path="create" element={
+                  <React.Suspense fallback={<>...</>}>
+                    <CategoriesCreatePage />
+                  </React.Suspense>
+                } />
+                <Route path="edit/:id" element={
+                  <React.Suspense fallback={<>...</>}>
+                    <CategoriesEditPage />
+                  </React.Suspense>
+                } />
+              </Route>
 
-                <Route path="categories">
-                  <Route index element={<CategoriesListPage/>}/>
-                  <Route path={'create'} element={<CategoriesCreatePage/>}/>
-                  <Route path={'edit/:id'} element={<CategoriesEditPage/>}/>
-                </Route>
+              <Route path="products">
+                <Route index element={
+                  <React.Suspense fallback={<>...</>}>
+                    <AdminProductListPage />
+                  </React.Suspense>
+                } />
+                <Route path="create" element={
+                  <React.Suspense fallback={<>...</>}>
+                    <AdminProductCreatePage />
+                  </React.Suspense>
+                } />
+              </Route>
 
-                <Route path="products">
-                  <Route index element={<AdminProductListPage/>}/>
-                  <Route path={'create'} element={<AdminProductCreatePage/>}/>
-
-                </Route>
-
-                <Route path="users">
-                  <Route index element={<AdminUsersPage/>}/>
-                  <Route path={'edit/:id'} element={<AdminUserEditPage/>}/>
-                </Route>
-
+              <Route path="users">
+                <Route index element={
+                  <React.Suspense fallback={<>...</>}>
+                    <AdminUsersPage />
+                  </React.Suspense>
+                } />
+                <Route path="edit/:id" element={
+                  <React.Suspense fallback={<>...</>}>
+                    <AdminUserEditPage />
+                  </React.Suspense>
+                } />
               </Route>
             </Route>
+          </Route>
 
+          {/* Not Found */}
+          <Route path="*" element={
+            <React.Suspense fallback={<>...</>}>
+              <NotFound />
+            </React.Suspense>
+          } />
 
-            <Route path="*" element={<NotFound/>}/>
-          </Routes>
-        </Router>
-      </>
-  )
-}
+        </Routes>
+      </Router>
+  );
+};
 
-export default App
+export default App;
