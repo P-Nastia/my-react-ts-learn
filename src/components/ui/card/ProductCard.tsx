@@ -2,6 +2,7 @@ import {Card, Col, Tooltip, Image} from 'antd';
 import {APP_ENV} from "../../../env";
 import {createUpdateCartLocal, type ICartItem} from "../../../store/cartSlice.ts";
 import {useAppDispatch, useAppSelector} from "../../../store";
+import type {ProductItemModel} from "../../../services/types.ts";
 
 
 interface Ingredient {
