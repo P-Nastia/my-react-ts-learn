@@ -16,7 +16,7 @@ const ForgotPasswordPage = React.lazy(() => import("./pages/Account/forgotPasswo
 const ForgotSuccessPage = React.lazy(() => import("./pages/Account/forgotSucces/index.tsx"));
 const ResetPasswordPage = React.lazy(() => import("./pages/Account/resetPassword/index.tsx"));
 const RegistrationPage = React.lazy(() => import("./pages/Account/register/index.tsx"));
-const ProductsPage = React.lazy(() => import("./pages/Product/list"));
+const ProductsPage = React.lazy(() => import("./pages/Product/list/index.tsx"));
 const NotFound = React.lazy(() => import("./pages/OtherPage/NotFound.tsx"));
 
 const DashboardHome = React.lazy(() => import("./pages/Dashboard/DashboardHome.tsx"));
@@ -26,7 +26,7 @@ const CategoriesCreatePage = React.lazy(() => import("./pages/Categories/create"
 const CategoriesEditPage = React.lazy(() => import("./pages/Categories/edit"));
 
 const AdminProductListPage = React.lazy(() => import("./admin/pages/Products/list/adminProductsListPage.tsx"));
-const AdminProductCreatePage = React.lazy(() => import("./admin/pages/Products/list/adminProductCreatePage.tsx"));
+const AdminProductCreatePage = React.lazy(() => import("./admin/pages/Products/create/adminProductCreatePage.tsx"));
 
 const AdminUsersPage = React.lazy(() => import("./admin/pages/Users"));
 const AdminUserEditPage = React.lazy(() => import("./admin/pages/Users/edit"));

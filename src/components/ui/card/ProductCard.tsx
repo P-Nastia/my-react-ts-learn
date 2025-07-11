@@ -1,5 +1,8 @@
 import {Card, Col, Tooltip, Image} from 'antd';
 import {APP_ENV} from "../../../env";
+import {createUpdateCartLocal, type ICartItem} from "../../../store/cartSlice.ts";
+import {useAppDispatch, useAppSelector} from "../../../store";
+
 
 interface Ingredient {
     id: number;
@@ -15,16 +18,58 @@ interface ProductCardProps {
         price: number;
         weight: number;
         productSize?: { name: string };
-        productIngredients?: Ingredient[];
+        ingredients?: Ingredient[];
         productImages?: { name: string }[];
     };
 }
 
+
+
 export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const mainImage = product.productImages?.[0]?.name;
-    const ingredients = product.productIngredients || [];
+    const ingredients = product.ingredients || [];
     const visible = ingredients.slice(0, 2);
     const hidden = ingredients.slice(2);
+    const dispatch = useAppDispatch();
+    const {user} = useAppSelector(state => state.auth);
+
+    const {items} = useAppSelector(state => state.cart);
+
+    //
+    const handleAddToCart = async (product: any) => {
+        if (!product) return;
+
+        const newItem: ICartItem = {
+            productId: product.id,
+            quantity: 1,
+            sizeName: product?.productSize?.name ?? "",
+            price: product?.price ?? product.price,
+            imageName: product?.productImages?.[0]?.name ?? product.productImages?.[0]?.name ?? "",
+            categoryId: product.category.id,
+            categoryName: product.category.name,
+            name: product.name,
+        };
+
+        const newItems: ICartItem[] = items.length > 0 ? [...items] :[];
+        const index = items!.findIndex(cartItem => cartItem.productId === newItem.productId);
+        if (index >= 0) {
+            newItems[index].quantity! = newItem.quantity!;
+
+            if (newItems[index].quantity! <= 0) {
+                newItems.splice(index, 1);
+            }
+        } else {
+            newItems.push(newItem);
+        }
+        if(!user) {
+            localStorage.setItem('cart', JSON.stringify(newItems));
+        }
+        else {
+            //запит на сервер, а потім уже оновляю cart
+
+        }
+        dispatch(createUpdateCartLocal(newItems));
+    };
 
     return (
         <Col xs={24} sm={12} md={8} lg={6}>
@@ -98,6 +143,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                                     </div>
                                 </div>
                             )}
+
+                            <button className={"bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-5 rounded-full"} onClick={ () => handleAddToCart(product)}>В кошик</button>
                         </div>
                     </div>
                 </Card>

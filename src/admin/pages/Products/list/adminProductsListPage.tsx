@@ -8,6 +8,12 @@ import LoadingOverlay from "../../../../components/ui/loading/LoadingOverlay.tsx
 const AdminProductListPage: React.FC = () => {
     const {data: products, isLoading} = useGetAllProductsQuery();
 
+    // const uniqueProducts = products
+    //     ? products.filter((product, index, self) =>
+    //         index === self.findIndex((p) => p.slug === product.slug)
+    //     )
+    //     : [];
+
     return (
         <>
             {isLoading && <LoadingOverlay/>}
@@ -38,7 +44,7 @@ const AdminProductListPage: React.FC = () => {
 
                         <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
                             {
-                                products!.map((product) => {
+                                products?.map((product) => {
                                         const image = product.productImages?.[0]?.name;
                                         return (
                                             <TableRow key={product.id}>

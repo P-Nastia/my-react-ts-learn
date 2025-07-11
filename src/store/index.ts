@@ -3,6 +3,7 @@ import {apiCategory} from "../services/apiCategory.ts";
 import {apiAccount} from "../services/apiAccount.ts";
 import {apiProduct} from "../services/apiProduct.ts";
 import authReducer from "./authSlice.ts"
+import cartReducer from "./cartSlice.ts"
 import {type TypedUseSelectorHook, useDispatch} from "react-redux";
 import {useSelector} from "react-redux";
 import {apiUser} from "../services/apiUser.ts";
@@ -14,6 +15,7 @@ export const store = configureStore({
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
         auth: authReducer,
+        cart: cartReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()

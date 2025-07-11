@@ -3,6 +3,8 @@ import {useGetAllProductsQuery} from "../../../services/apiProduct.ts";
 import ProductCard from "../../../components/ui/card/ProductCard.tsx";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
 
+
+
 export const ProductsPage: React.FC = () => {
     const {data: products, isLoading, isError} = useGetAllProductsQuery();
 
