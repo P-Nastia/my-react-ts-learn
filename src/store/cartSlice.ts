@@ -8,48 +8,38 @@ export interface ICartItem {
     categoryName?: string;
     quantity?: number;
     price?: number;
-    sizeName?: string;
     imageName?: string;
 }
 
 export  interface ICartState {
     items: ICartItem[];
     totalPrice: number;
+    isSync: boolean;
 }
 
 
-const initialState: ICartState =
-    {
-        items: localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [],
-        totalPrice: 0,
-    }
+const initialState: ICartState = {
+    items: localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')!) : [],
+    totalPrice: 0,
+    isSync: false,
+}
+
 
 const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        createUpdateCartLocal: (state, action: PayloadAction<ICartItem[]>) => {
+        createUpdateCart: (state, action: PayloadAction<ICartItem[]>) => {
             state.items = action.payload;
-
-
-            // localStorage.setItem('cart', JSON.stringify(state));
+            state.totalPrice = action.payload.reduce(
+                (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 0),
+                0
+            );
         },
-
-        // removeCartItemLocal: (state, action: PayloadAction<IRemoveCartItem>) => {
-        //     const removeCart = action.payload;
-        //
-        //     state.localCart.items = state.localCart.items.filter(el  => el.productId != removeCart.id);
-        //     localStorage.setItem('cart', JSON.stringify(state.localCart));
-        // },
-        //
-        // clearLocalCartLocal: (state) => {
-        //     state.localCart.items = [];
-        //     localStorage.removeItem('cart');
-        // },
     },
 });
 
-export const { createUpdateCartLocal } = cartSlice.actions;
+export const {createUpdateCart} = cartSlice.actions;
 
 
 export default cartSlice.reducer;

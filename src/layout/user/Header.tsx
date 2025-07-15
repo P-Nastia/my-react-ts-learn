@@ -1,15 +1,25 @@
 
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
-import {useAppDispatch, useAppSelector} from "../../store";
+import {useAppSelector} from "../../store";
 import {logout} from "../../store/authSlice.ts";
-import {Badge, Button} from "antd";
+import {Button} from "antd";
+import {useDispatch} from "react-redux";
+import CartDrawer from "../../components/ui/cart";
 
 const Header: React.FC = () => {
 
-    const {user}=useAppSelector(state => state.auth);
-    const {items}=useAppSelector(state => state.cart);
-    const dispatch = useAppDispatch();
+    const {items} = useAppSelector(state => state.cart);
+
+    const {user} = useAppSelector(state => state.auth);
+
+    const dispatch = useDispatch();
+
+    const logoutHandler = async () => {
+        // if (!serverCart?.items) return;
+        localStorage.setItem('cart', JSON.stringify(items));
+        dispatch(logout());
+    }
 
     return (
         <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
@@ -36,7 +46,7 @@ const Header: React.FC = () => {
 
 
                         <Button
-                            onClick={() => dispatch(logout())}
+                            onClick={logoutHandler}
                             className="bg-white text-orange-500 border-none hover:bg-orange-100"
                         >
                             Вихід
@@ -60,9 +70,10 @@ const Header: React.FC = () => {
                     </>
 
                 )}
-                <Badge count={items.length} showZero>
-                    <Button>Кошик</Button>
-                </Badge>
+                <CartDrawer />
+                {/*<Badge count={items.length} showZero>*/}
+                {/*    <Button>Кошик</Button>*/}
+                {/*</Badge>*/}
             </div>
 
 

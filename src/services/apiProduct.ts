@@ -6,7 +6,7 @@ import {serialize} from "object-to-formdata";
 export const apiProduct = createApi({
     reducerPath: 'api/products',
     baseQuery: createBaseQuery('products'),
-    tagTypes: ['Products'],
+    tagTypes: ['Products', 'Product'],
     endpoints: (builder) => ({
         getAllProducts: builder.query<ProductItemModel[], void>({
             query: () => '',
@@ -43,6 +43,14 @@ export const apiProduct = createApi({
                 };
             }
         }),
+        getProductById: builder.query<ProductItemModel, number>({
+            query: (id) => `id/${id}`,
+            providesTags: ['Product'],
+        }),
+        getProductsBySlug: builder.query<ProductItemModel[], string>({
+            query: (slug) => `slug/${slug}`,
+            providesTags: ['Product'],
+        }),
     }),
 });
 
@@ -50,4 +58,7 @@ export const {
     useGetAllProductsQuery,
     useAddProductMutation,
     useGetIngredientsQuery,
-    useGetSizesQuery} = apiProduct;
+    useGetSizesQuery,
+    useGetProductByIdQuery,
+    useGetProductsBySlugQuery,
+} = apiProduct;

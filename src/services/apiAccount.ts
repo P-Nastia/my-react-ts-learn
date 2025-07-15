@@ -2,6 +2,8 @@ import {createApi} from "@reduxjs/toolkit/query/react";
 import type {IUserLogin, ILoginResponse, IRegister} from "./types.ts";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import {serialize} from "object-to-formdata";
+import {loginSuccess} from "../store/authSlice.ts";
+import {apiCart} from "./apiCart.ts";
 
 export interface IForgotPasswordRequest {
     email: string;
@@ -30,13 +32,40 @@ export const apiAccount = createApi({
                 method: 'POST',
                 body: credentials,
             }),
+
+            async onQueryStarted(_,{dispatch,queryFulfilled}){
+                try{
+                    const result=await queryFulfilled;
+                    if(result.data && result.data.token){
+                        dispatch(loginSuccess(result.data.token));
+                        dispatch(apiCart.util.invalidateTags(["Carts"]));
+                        //localStorage.removeItem('cart');
+                    }
+                }
+                catch(error){
+                    console.log("Login fail",error);
+                }
+            }
         }),
         loginByGoogle:builder.mutation<{token: string}, string>({
             query: (token) => ({
                 url: 'googleLogin',
                 method: 'POST',
                 body: {token}
-            })
+            }),
+            async onQueryStarted(_,{dispatch,queryFulfilled}){
+                try{
+                    const result=await queryFulfilled;
+                    if(result.data && result.data.token){
+                        dispatch(loginSuccess(result.data.token));
+                        dispatch(apiCart.util.invalidateTags(["Carts"]));
+
+                    }
+                }
+                catch(error){
+                    console.log("Login fail",error);
+                }
+            }
         }),
         register: builder.mutation<ILoginResponse, IRegister>({
             query: (credentials) => {

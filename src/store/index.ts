@@ -7,6 +7,7 @@ import cartReducer from "./cartSlice.ts"
 import {type TypedUseSelectorHook, useDispatch} from "react-redux";
 import {useSelector} from "react-redux";
 import {apiUser} from "../services/apiUser.ts";
+import {apiCart} from "../services/apiCart.ts";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         [apiAccount.reducerPath]: apiAccount.reducer,
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
+        [apiCart.reducerPath]: apiCart.reducer,
         auth: authReducer,
         cart: cartReducer,
     },
@@ -22,6 +24,7 @@ export const store = configureStore({
             .concat(apiCategory.middleware)
             .concat(apiAccount.middleware)
             .concat(apiProduct.middleware)
+            .concat(apiCart.middleware)
             .concat(apiUser.middleware),
 });
 

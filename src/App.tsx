@@ -30,6 +30,7 @@ const AdminProductCreatePage = React.lazy(() => import("./admin/pages/Products/c
 
 const AdminUsersPage = React.lazy(() => import("./admin/pages/Users"));
 const AdminUserEditPage = React.lazy(() => import("./admin/pages/Users/edit"));
+const ProductPage = React.lazy(()=>import("./pages/Product/item"));
 
 const App: React.FC = () => {
   return (
@@ -72,9 +73,18 @@ const App: React.FC = () => {
                 <RegistrationPage />
               </React.Suspense>
             } />
-            <Route path="products" element={
+            <Route path="products">
+              <Route index element={
+                <React.Suspense fallback={<>...</>}>
+                  <ProductsPage />
+                </React.Suspense>
+              } />
+            </Route>
+
+
+            <Route path="product/:id" element={
               <React.Suspense fallback={<>...</>}>
-                <ProductsPage />
+                <ProductPage />
               </React.Suspense>
             } />
           </Route>
@@ -121,6 +131,7 @@ const App: React.FC = () => {
                     <AdminProductCreatePage />
                   </React.Suspense>
                 } />
+
               </Route>
 
               <Route path="users">
