@@ -31,7 +31,7 @@ export interface IUserLogin{
     password: string;
 }
 
-export interface ILoginResponse {
+export interface IAuthResponse {
     token: string;
 }
 

@@ -5,10 +5,9 @@ import { Spin, Carousel, Image, Tag, Typography, Radio, Button, Space } from "an
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import {APP_ENV} from "../../../env";
-//import {ProductItemModel} from "../../../services/types.ts";
-import {useAppDispatch, useAppSelector} from "../../../store";
-import {createUpdateCart, type ICartItem} from "../../../store/cartSlice.ts";
-import {useCreateUpdateCartMutation} from "../../../services/apiCart.ts";
+import type {ICartItem} from "../../../store/localCartSlice.ts";
+import {useCart} from "../../../hooks/useCart.ts";
+import {useAppSelector} from "../../../store";
 
 const { Title } = Typography;
 
@@ -16,6 +15,8 @@ const ProductPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const productId = id ? parseInt(id) : undefined;
+    const {user} = useAppSelector(state => state.auth);
+    const { cart, addToCart } = useCart(user!=null);
 
     console.log(productId);
 
@@ -33,55 +34,29 @@ const ProductPage: React.FC = () => {
         skip: !currentProduct?.slug,
     });
 
-    const {user} = useAppSelector(state => state.auth);
-    const items = useAppSelector(state => state.cart.items);
-    const isInCart = items.some(item =>
+    const isInCart = cart.some(item =>
         currentProduct &&
         item.productId === currentProduct.id
     );
     console.log("currentProduct", currentProduct);
-    const [createUpdateServerCart] = useCreateUpdateCartMutation();
-    const  dispatch = useAppDispatch();
 
     const handleAddToCart = async () => {
         if (!currentProduct) return;
 
+        console.log("product add", currentProduct);
+
         const newItem: ICartItem = {
+            id: currentProduct.id,
             productId: currentProduct.id,
             quantity: 1,
             price: currentProduct.price,
             imageName: currentProduct.productImages?.[0]?.name ?? "",
-            categoryId: currentProduct.category!.id,
-            categoryName: currentProduct.category!.name,
+            categoryId: 0,
+            categoryName: "",
             name: currentProduct.name,
         };
 
-        let newItems : ICartItem[] = items.length > 0 ? [...items] : [];
-
-        if (!newItems) {
-            newItems = [];
-        }
-        const index = newItems!.findIndex(cartItem => cartItem.productId === newItem.productId);
-        if (index >= 0) {
-            newItems[index].quantity! = newItem.quantity!;
-
-            if (newItems[index].quantity! <= 0) {
-                newItems.splice(index, 1);
-            }
-        } else {
-            newItems.push(newItem);
-        }
-
-        if (!user) {
-            localStorage.setItem('cart', JSON.stringify(newItems));
-        }
-        else {
-            createUpdateServerCart({
-                productId: newItem.productId!,
-                quantity: newItem.quantity!,
-            });
-        }
-        dispatch(createUpdateCart(newItems));
+        await addToCart(newItem);
 
     };
 

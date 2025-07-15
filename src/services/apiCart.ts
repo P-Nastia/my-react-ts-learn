@@ -1,47 +1,37 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
-import {createUpdateCart, type ICartItem} from "../store/cartSlice.ts";
+import {type ICartItem} from "../store/localCartSlice.ts";
 
-export interface ICreateUpdateCartItem {
-    productId: number;
-    quantity: number;
-}
-
-export interface IRemoveCartItem {
-    id: number;
-}
-
-export  interface ICart {
-    id: number;
-    items: ICartItem[];
-    totalPrice: number;
-}
 
 export const apiCart = createApi({
     reducerPath: 'apiCart',
     baseQuery: createBaseQuery('Carts'),
     tagTypes: ["Carts"],
     endpoints: (builder) => ({
-        getCart: builder.query<ICart, void>({
+        getCart: builder.query<ICartItem[], void>({
             query: () => ({
                 url: 'getItems',
                 method: 'GET'
             }),
-            providesTags: ['Carts'],
-            async onQueryStarted(_, {dispatch, queryFulfilled }) {
-                try {
-                    const result = await queryFulfilled;
-                    console.log("Get user items", result.data)
-                    if(result.data && result.data.items) {
-                        dispatch(createUpdateCart(result.data.items));
-                    }
-                } catch (error) {
-                    console.log("getCart fail", error);
-                }
-            },
+            providesTags: ['Carts']
         }),
 
-        createUpdateCart: builder.mutation<void, ICreateUpdateCartItem>({
+        addToCartsRange: builder.mutation<void, ICartItem[]>({
+            query: (items) => {
+                try {
+                    return {
+                        url: 'addRange',
+                        method: 'POST',
+                        body: items,
+                    };
+                } catch {
+                    throw new Error('Error add item to cart');
+                }
+            },
+            invalidatesTags: ["Carts"]
+        }),
+
+        createUpdateCart: builder.mutation<void, ICartItem>({
             query: (item) => {
                 try {
                     return {
@@ -52,14 +42,15 @@ export const apiCart = createApi({
                 } catch {
                     throw new Error('Error add item to cart');
                 }
+
             },
             invalidatesTags: ["Carts"]
         }),
-        removeCartItem: builder.mutation<void, IRemoveCartItem>({
-            query: (item) => {
+        removeCartItem: builder.mutation<void, number>({
+            query: (id) => {
                 try {
                     return {
-                        url: `delete/${item.id}`,
+                        url: `delete/${id}`,
                         method: 'PUT'
                     };
                 } catch {
@@ -74,7 +65,6 @@ export const apiCart = createApi({
 
 export const {
     useGetCartQuery,
-    useLazyGetCartQuery,
     useCreateUpdateCartMutation,
     useRemoveCartItemMutation
 } = apiCart;

@@ -1,48 +1,43 @@
 import {Link} from "react-router";
-import { Form, type FormProps, Input, message} from "antd";
-import type {IUserLogin, ServerError} from "../../../services/types.ts";
-import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
+import { Form, type FormProps, Input} from "antd";
+import type {IUserLogin} from "../../../services/types.ts";
+//import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
-import {useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
+import {type ILoginRequest, useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
 import {useGoogleLogin} from "@react-oauth/google";
-import {useGetCartQuery, useLazyGetCartQuery} from "../../../services/apiCart.ts";
-import {useAppSelector} from "../../../store";
+// import {useGetCartQuery, useLazyGetCartQuery} from "../../../services/apiCart.ts";
+// import {useAppSelector} from "../../../store";
 import {useNavigate} from "react-router-dom";
 
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
-    const [triggerGetCart] = useLazyGetCartQuery();    const { user } = useAppSelector(state => state.auth);
-    const { data: serverCart, isLoading: isLoadingCart } = useGetCartQuery(undefined, {
-        skip: !user, // <-- only run after login
-    });
+
     const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
     const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
 
-    const [form] = Form.useForm<IUserLogin>();
-    const setServerErrors = useFormServerErrors(form);
+    //const [form] = Form.useForm<IUserLogin>();
+    //const setServerErrors = useFormServerErrors(form);
 
-    console.log("Server cart", serverCart?.items);
-
-    console.log("isLoadingCart", isLoadingCart, "serverCart", serverCart);
-    const onFinish: FormProps<IUserLogin>['onFinish'] = async (values) => {
+    //console.log("isLoadingCart", isLoadingCart, "serverCart", serverCart);
+    const onFinish: FormProps<ILoginRequest>["onFinish"] = async (values) => {
         try {
             await login(values).unwrap();
-            // console.log("Local store", serverCart?.items);
-            triggerGetCart();
-            //await asyncCartLocalStorage();
             navigate('/');
-
-
-
-        } catch (error) {
-            const serverError = error as ServerError;
-
-            if (serverError?.status === 400 && serverError?.data?.errors) {
-                setServerErrors(serverError.data.errors);
-            } else {
-                message.error("Сталася помилка при вході");
-            }
+            // const { token } = response;
+            // dispatch(loginSuccess(token));
+            //
+            // const user = getUserFromToken(token);
+            // console.log("user", user);
+            // if (!user || !user.roles.includes("Admin")) {
+            //     navigate('/');
+            // }
+            // else {
+            //     navigate('/admin/home');
+            // }
+        } catch (err) {
+            console.log("error", err);
+            alert("Login failed");
         }
     };
 
@@ -51,18 +46,18 @@ const LoginPage: React.FC = () => {
         {
             try {
                 await loginByGoogle(tokenResponse.access_token).unwrap();
-                triggerGetCart();
-                // await asyncCartLocalStorage();
+                // dispatch(loginSuccess(result.token));
                 navigate('/');
             } catch (error) {
 
-                const serverError = error as ServerError;
-
-                if (serverError?.status === 400 && serverError?.data?.errors) {
-                    setServerErrors(serverError.data.errors);
-                } else {
-                    message.error("Сталася помилка при вході");
-                }
+                console.log("User server error auth", error);
+                // const serverError = error as ServerError;
+                //
+                // if (serverError?.status === 400 && serverError?.data?.errors) {
+                //     // setServerErrors(serverError.data.errors);
+                // } else {
+                //     message.error("Сталася помилка при вході");
+                // }
             }
         },
     });
@@ -76,8 +71,7 @@ const LoginPage: React.FC = () => {
 
                 <h2 className="text-2xl font-semibold text-center text-orange-500 mb-6">Вхід в акаунт</h2>
 
-                <Form
-                    form={form}
+                <Form<ILoginRequest>
                     layout="vertical"
                     onFinish={onFinish}
                     className="space-y-4"

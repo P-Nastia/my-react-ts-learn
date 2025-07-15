@@ -3,11 +3,12 @@ import {apiCategory} from "../services/apiCategory.ts";
 import {apiAccount} from "../services/apiAccount.ts";
 import {apiProduct} from "../services/apiProduct.ts";
 import authReducer from "./authSlice.ts"
-import cartReducer from "./cartSlice.ts"
+import localCarReducer from './localCartSlice.ts';
 import {type TypedUseSelectorHook, useDispatch} from "react-redux";
 import {useSelector} from "react-redux";
 import {apiUser} from "../services/apiUser.ts";
 import {apiCart} from "../services/apiCart.ts";
+import {setupListeners} from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
     reducer: {
@@ -16,8 +17,9 @@ export const store = configureStore({
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
         [apiCart.reducerPath]: apiCart.reducer,
+        localCart: localCarReducer,
         auth: authReducer,
-        cart: cartReducer,
+
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -27,7 +29,7 @@ export const store = configureStore({
             .concat(apiCart.middleware)
             .concat(apiUser.middleware),
 });
-
+setupListeners(store.dispatch);
 export type RootState=ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 

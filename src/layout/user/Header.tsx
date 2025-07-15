@@ -1,24 +1,34 @@
 
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
-import {useAppSelector} from "../../store";
+import {useAppDispatch, useAppSelector} from "../../store";
 import {logout} from "../../store/authSlice.ts";
 import {Button} from "antd";
-import {useDispatch} from "react-redux";
 import CartDrawer from "../../components/ui/cart";
+import {useCart} from "../../hooks/useCart.ts";
+import {apiCart} from "../../services/apiCart.ts";
+import {addItem} from "../../store/localCartSlice.ts";
 
 const Header: React.FC = () => {
 
-    const {items} = useAppSelector(state => state.cart);
-
     const {user} = useAppSelector(state => state.auth);
 
-    const dispatch = useDispatch();
+    const { cart } = useCart(user!=null);
+
+    const dispatch = useAppDispatch();
+
 
     const logoutHandler = async () => {
         // if (!serverCart?.items) return;
-        localStorage.setItem('cart', JSON.stringify(items));
+
+        const serverCart = [...cart];
         dispatch(logout());
+        console.log('Server cart', serverCart);
+        dispatch(apiCart.util.resetApiState()); // очищення кешу запитів кошика
+        console.log('Server cart', serverCart);
+        serverCart.forEach(item => {
+            dispatch(addItem(item));
+        });
     }
 
     return (

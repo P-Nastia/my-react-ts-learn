@@ -1,69 +1,24 @@
 import {Badge, Button, Drawer, List, Space, Image, Typography, Divider} from "antd";
-import {useAppDispatch, useAppSelector} from "../../../store";
-import {useEffect, useState} from "react";
-
+import {useAppSelector} from "../../../store";
+import {useState} from "react";
+import {type ICartItem} from "../../../store/localCartSlice.ts";
 import {APP_ENV} from "../../../env";
-import {createUpdateCart, type ICartItem} from "../../../store/cartSlice.ts";
-import {
-    type ICreateUpdateCartItem, type IRemoveCartItem,
-    useCreateUpdateCartMutation, useGetCartQuery,
-    useRemoveCartItemMutation
-} from "../../../services/apiCart.ts";
+import {useCart} from "../../../hooks/useCart.ts";
 
-
-const { Text } = Typography;
+const {Text} = Typography;
 
 const CartDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const { user } = useAppSelector(state => state.auth);
 
-    const { isLoading } = useGetCartQuery(undefined, { skip: !user });
+    const {user} = useAppSelector(state => state.auth);
 
-
-    const { items } = useAppSelector(state => state.cart);
-    console.log("Cart items from redux:", items);
-    const dispatch = useAppDispatch();
-
-    const [removeServerCartItem] = useRemoveCartItemMutation();
-    const [createUpdateServerCart] = useCreateUpdateCartMutation();
-
-    useEffect(() => {
-        if (!user) {
-            localStorage.setItem("cart", JSON.stringify(items));
-        }
-    }, [items, user]);
-
-    const handleEditCart = (prop: ICreateUpdateCartItem) => {
-        const newItems = items.map(item =>
-            item.productId === prop.productId
-                ? { ...item, quantity: prop.quantity }
-                : item
-        );
-
-        if (user) {
-            createUpdateServerCart(prop);
-        } else {
-            localStorage.setItem('cart', JSON.stringify(newItems));
-        }
-
-        dispatch(createUpdateCart(newItems));
-    };
-
-    const handleRemoveCart = (prop: IRemoveCartItem) => {
-        const newItems = items.filter(el => el.productId !== prop.id);
-
-        if (user) {
-            removeServerCartItem(prop);
-        } else {
-            localStorage.setItem('cart', JSON.stringify(newItems));
-        }
-
-        dispatch(createUpdateCart(newItems));
-    };
-
+    const {cart, addToCart, removeFromCart} = useCart(user != null);
+console.log("CART",cart);
     return (
         <>
-            <Badge count={items.reduce((acc, obj) => acc + (obj.quantity ?? 0), 0)} showZero>
+            <Badge count={cart?.reduce(function (acc, obj) {
+                return acc + obj.quantity!;
+            }, 0)} showZero>
                 <Button onClick={() => setOpen(true)}>Кошик</Button>
             </Badge>
 
@@ -73,15 +28,16 @@ const CartDrawer: React.FC = () => {
                 open={open}
                 width={400}
             >
+
                 <List
-                    dataSource={items}
-                    locale={{ emptyText: isLoading ? "Завантаження кошика..." : "Кошик порожній" }}
+                    dataSource={cart}
+                    locale={{emptyText: "Кошик порожній"}}
                     renderItem={(item: ICartItem) => (
                         <List.Item
                             actions={[
                                 <Button
                                     danger
-                                    onClick={() => handleRemoveCart({ id: item.productId! })}
+                                    onClick={() => removeFromCart(item.productId!)}
                                 >
                                     Видалити
                                 </Button>
@@ -95,14 +51,17 @@ const CartDrawer: React.FC = () => {
                                     preview={false}
                                 />
                                 <div>
-                                    <Text strong>{item.name}</Text><br />
-                                    <Text type="secondary">{item.categoryName}</Text><br />
-                                    <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "8px 0" }}>
+                                    <Text strong>
+                                        {item.name}
+                                    </Text>
+                                    <br/>
+                                    <Text type="secondary">{item.categoryName}</Text>
+                                    <br/>
+                                    <div style={{display: "flex", alignItems: "center", gap: 8, margin: "8px 0"}}>
                                         <Button
                                             size="small"
                                             onClick={() =>
-                                                item.quantity! > 1 &&
-                                                handleEditCart({ productId: item.productId!, quantity: item.quantity! - 1 })
+                                                item.quantity! > 1 && addToCart({...item, quantity: -1})
                                             }
                                         >
                                             -
@@ -111,7 +70,7 @@ const CartDrawer: React.FC = () => {
                                         <Button
                                             size="small"
                                             onClick={() =>
-                                                handleEditCart({ productId: item.productId!, quantity: item.quantity! + 1 })
+                                                addToCart({...item, quantity: 1})
                                             }
                                         >
                                             +
@@ -124,17 +83,18 @@ const CartDrawer: React.FC = () => {
                     )}
                 />
 
-                <Divider />
+                <Divider/>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Button type="primary" disabled={items.length === 0}>
-                        Оформити
+                <div
+                    style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
+                >
+                    <Button type="primary" disabled={cart.length === 0}>
+                        Оформити замовлення
                     </Button>
                 </div>
             </Drawer>
         </>
     );
 };
-
 
 export default CartDrawer;
