@@ -15,19 +15,18 @@ const { Text } = Typography;
 
 const CartDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
+    const { user } = useAppSelector(state => state.auth);
 
-    // Fetch cart only when drawer is open
-    const { isLoading } = useGetCartQuery(undefined, { skip: !open });
+    const { isLoading } = useGetCartQuery(undefined, { skip: !user });
+
 
     const { items } = useAppSelector(state => state.cart);
     console.log("Cart items from redux:", items);
-    const { user } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
 
     const [removeServerCartItem] = useRemoveCartItemMutation();
     const [createUpdateServerCart] = useCreateUpdateCartMutation();
 
-    // Sync localStorage when items change and user is guest
     useEffect(() => {
         if (!user) {
             localStorage.setItem("cart", JSON.stringify(items));
