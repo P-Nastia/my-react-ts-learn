@@ -8,6 +8,7 @@ import {APP_ENV} from "../../../env";
 import type {ICartItem} from "../../../store/localCartSlice.ts";
 import {useCart} from "../../../hooks/useCart.ts";
 import {useAppSelector} from "../../../store";
+import {Link} from "react-router";
 
 const { Title } = Typography;
 
@@ -120,10 +121,10 @@ const ProductPage: React.FC = () => {
                         <div style={{ marginTop: 24 }}>
                             <Radio.Group
                                 value={currentProduct.id}
-                                onChange={(e) => navigate(`/products/product/${e.target.value}`)}
                             >
                                 {allProducts.map(product => (
-                                    <Radio.Button key={product.id} value={product.id}>
+                                    <Radio.Button key={product.id} value={product.id}
+                                    onClick={(e) => navigate(`/product/${product.id}`)}>
                                         {product.productSize?.name}
                                     </Radio.Button>
                                 ))}
