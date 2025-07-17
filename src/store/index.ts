@@ -18,16 +18,16 @@ export const store = configureStore({
         [apiUser.reducerPath]: apiUser.reducer,
         [apiCart.reducerPath]: apiCart.reducer,
         localCart: localCarReducer,
-        auth: authReducer,
-
+        auth: authReducer
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
-            .concat(apiCategory.middleware)
-            .concat(apiAccount.middleware)
-            .concat(apiProduct.middleware)
-            .concat(apiCart.middleware)
-            .concat(apiUser.middleware),
+        getDefaultMiddleware().concat(
+            apiCategory.middleware,
+            apiAccount.middleware,
+            apiProduct.middleware,
+            apiUser.middleware,
+            apiCart.middleware
+        ),
 });
 setupListeners(store.dispatch);
 export type RootState=ReturnType<typeof store.getState>

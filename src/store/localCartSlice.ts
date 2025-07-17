@@ -8,7 +8,6 @@ export interface ICartItem {
     categoryName?: string;
     quantity?: number;
     price?: number;
-    sizeName?: string;
     imageName?: string;
 }
 

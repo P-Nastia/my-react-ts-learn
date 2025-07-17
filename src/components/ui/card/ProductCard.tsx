@@ -2,6 +2,7 @@ import {Card, Col, Tooltip, Image} from 'antd';
 import {APP_ENV} from "../../../env";
 import {Link} from "react-router-dom";
 
+
 interface Ingredient {
     id: number;
     name: string;

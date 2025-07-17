@@ -56,7 +56,7 @@ const Header: React.FC = () => {
 
 
                         <Button
-                            onClick={logoutHandler}
+                            onClick={() => logoutHandler()}
                             className="bg-white text-orange-500 border-none hover:bg-orange-100"
                         >
                             Вихід
