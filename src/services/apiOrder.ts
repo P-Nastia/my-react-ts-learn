@@ -2,20 +2,11 @@ import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import {serialize} from "object-to-formdata";
 
-export interface ICityItem {
+export interface IBaseSelectItem {
     id: number;
     name: string;
 }
 
-export interface IPostDepartmentItem {
-    id: number;
-    name: string;
-}
-
-export interface IPaymentTypeItem {
-    id: number;
-    name: string;
-}
 
 export interface ISearchPostDepartment {
     cityId: number;
@@ -43,11 +34,11 @@ export const apiOrder = createApi({
             query: () => 'list',
             providesTags: ['Order'],
         }),
-        getPaymentTypes: builder.query<IPaymentTypeItem[], void>({
+        getPaymentTypes: builder.query<IBaseSelectItem[], void>({
             query: () => 'payment-types',
             providesTags: ['Order'],
         }),
-        getCities: builder.query<ICityItem[], string>({
+        getCities: builder.query<IBaseSelectItem[], string>({
             query: (city) => ({
                 url: `search-city`,
                 params: {
@@ -57,7 +48,7 @@ export const apiOrder = createApi({
 
             providesTags: ['Order'],
         }),
-        getPostDepartments: builder.query<IPostDepartmentItem[], ISearchPostDepartment>({
+        getPostDepartments: builder.query<IBaseSelectItem[], ISearchPostDepartment>({
             query: ({ cityId, name }) => ({
                 url: 'post-departments',
                 params: {

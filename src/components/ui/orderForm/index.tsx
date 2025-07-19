@@ -98,10 +98,10 @@ console.log(user);
                             placeholder="Оберіть місто"
                             onChange={(value) => {
                                 setSelectedCityId(value);
-                                setSearchDepartmentText(""); // reset department search when city changes
+                                setSearchDepartmentText("");
                             }}
                             onSearch={(value) => setSearchCityText(value)}
-                            filterOption={false} // disable built-in filter to rely on server-side search
+                            filterOption={false}
                             allowClear
                         >
                             {cities.map((city) => (
