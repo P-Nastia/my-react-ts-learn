@@ -35,9 +35,9 @@ id: number;
 }
 
 export const apiOrder = createApi({
-    reducerPath: 'api',
+    reducerPath: 'apiOrder',
     baseQuery: createBaseQuery('order'),
-    tagTypes: ['Order', 'Cart','Carts'],
+    tagTypes: ['Order'],
     endpoints: (builder) => ({
         getUserOrders: builder.query<IOrder, void>({
             query: () => 'list',
@@ -70,7 +70,7 @@ export const apiOrder = createApi({
                     body: formData,
                 };
             },
-            invalidatesTags: ['Cart', 'Order','Carts'],
+            invalidatesTags: ['Order'],
         })
     }),
 });
