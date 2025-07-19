@@ -9,6 +9,7 @@ import {useSelector} from "react-redux";
 import {apiUser} from "../services/apiUser.ts";
 import {apiCart} from "../services/apiCart.ts";
 import {setupListeners} from "@reduxjs/toolkit/query";
+import {apiOrder} from "../services/apiOrder.ts";
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
         [apiProduct.reducerPath]: apiProduct.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
         [apiCart.reducerPath]: apiCart.reducer,
+        [apiOrder.reducerPath]: apiOrder.reducer,
         localCart: localCarReducer,
         auth: authReducer
     },
@@ -26,7 +28,8 @@ export const store = configureStore({
             apiAccount.middleware,
             apiProduct.middleware,
             apiUser.middleware,
-            apiCart.middleware
+            apiCart.middleware,
+            apiOrder.middleware,
         ),
 });
 setupListeners(store.dispatch);

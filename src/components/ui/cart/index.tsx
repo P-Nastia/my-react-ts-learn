@@ -4,6 +4,7 @@ import {useState} from "react";
 import {type ICartItem} from "../../../store/localCartSlice.ts";
 import {APP_ENV} from "../../../env";
 import {useCart} from "../../../hooks/useCart.ts";
+import OrderForm from "../orderForm";
 
 const {Text} = Typography;
 
@@ -14,6 +15,7 @@ const CartDrawer: React.FC = () => {
 
     const {cart, addToCart, removeFromCart} = useCart(user != null);
 console.log("CART",cart);
+
     return (
         <>
             <Badge count={cart?.reduce(function (acc, obj) {
@@ -85,13 +87,7 @@ console.log("CART",cart);
 
                 <Divider/>
 
-                <div
-                    style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
-                >
-                    <Button type="primary" disabled={cart.length === 0}>
-                        Оформити замовлення
-                    </Button>
-                </div>
+                <OrderForm></OrderForm>
             </Drawer>
         </>
     );

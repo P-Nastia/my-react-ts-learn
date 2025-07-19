@@ -7,7 +7,7 @@ export const useCart = (isAuth: boolean) => {
     const dispatch = useDispatch();
     const localCart = useSelector((state: RootState) => state.localCart.items);
 
-    const { data: remoteCart, ...remote } = useGetCartQuery(undefined, { skip: !isAuth });
+    const { data: remoteCart,refetch ,...remote } = useGetCartQuery(undefined, { skip: !isAuth });
     const [addRemote] = useCreateUpdateCartMutation();
     const [removeRemote] = useRemoveCartItemMutation();
 
@@ -17,6 +17,7 @@ export const useCart = (isAuth: boolean) => {
             const existing = remoteCart?.find(i => i.productId === item.productId);
             const quantity = existing ? existing.quantity! + item.quantity! : 1;
             await addRemote({ ...item, quantity });
+            refetch();
         } else {
             dispatch(addItem(item));
         }
@@ -25,6 +26,7 @@ export const useCart = (isAuth: boolean) => {
     const removeFromCart = async (productId: number) => {
         if (isAuth) {
             await removeRemote(productId);
+            refetch();
         } else {
             dispatch(removeItem(productId));
         }
@@ -34,6 +36,7 @@ export const useCart = (isAuth: boolean) => {
         cart: isAuth ? remoteCart ?? [] : localCart,
         addToCart,
         removeFromCart,
+        refetch,
         ...remote,
     };
 };

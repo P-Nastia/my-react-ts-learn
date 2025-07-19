@@ -17,47 +17,28 @@ export const apiCart = createApi({
         }),
 
         addToCartsRange: builder.mutation<void, ICartItem[]>({
-            query: (items) => {
-                try {
-                    return {
-                        url: 'addRange',
-                        method: 'POST',
-                        body: items,
-                    };
-                } catch {
-                    throw new Error('Error add item to cart');
-                }
-            },
-            invalidatesTags: ["Carts"]
+            query: (items) => ({
+                url: 'addRange',
+                method: 'POST',
+                body: items,
+            }),
+            invalidatesTags: ["Carts"],
         }),
 
         createUpdateCart: builder.mutation<void, ICartItem>({
-            query: (item) => {
-                try {
-                    return {
-                        url: 'createUpdate',
-                        method: 'POST',
-                        body: item,
-                    };
-                } catch {
-                    throw new Error('Error add item to cart');
-                }
-
-            },
-            invalidatesTags: ["Carts"]
+            query: (item) => ({
+                url: 'createUpdate',
+                method: 'POST',
+                body: item,
+            }),
+            invalidatesTags: ["Carts"],
         }),
         removeCartItem: builder.mutation<void, number>({
-            query: (id) => {
-                try {
-                    return {
-                        url: `delete/${id}`,
-                        method: 'PUT'
-                    };
-                } catch {
-                    throw new Error('Error remove item from cart');
-                }
-            },
-            invalidatesTags: ["Carts"]
+            query: (id) => ({
+                url: `delete/${id}`,
+                method: 'PUT',
+            }),
+            invalidatesTags: ["Carts"],
         }),
     })
 });

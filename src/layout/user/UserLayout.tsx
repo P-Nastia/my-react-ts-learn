@@ -12,7 +12,7 @@ const UserLayout: React.FC = () => {
             </main>
 
             <footer className="w-full py-3 px-6 bg-gray-100 text-sm text-center dark:bg-gray-800 dark:text-gray-300">
-                © 2025 FoodDelivery. Усі права захищено.
+                © 2025 Pizushi. Усі права захищено.
             </footer>
         </div>
     );
