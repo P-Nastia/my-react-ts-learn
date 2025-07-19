@@ -15,7 +15,6 @@ export interface ISearchPostDepartment {
 
 export interface ICreateOrderItem {
     recipientName: string;
-    cityId: number;
     postDepartmentId: number;
     phoneNumber: number;
     paymentTypeId: number;

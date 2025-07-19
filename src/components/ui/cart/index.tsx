@@ -16,6 +16,10 @@ const CartDrawer: React.FC = () => {
     const {cart, addToCart, removeFromCart} = useCart(user != null);
 console.log("CART",cart);
 
+const handleCloseOrderForm=()=>{
+    setOpen(false);
+}
+
     return (
         <>
             <Badge count={cart?.reduce(function (acc, obj) {
@@ -87,7 +91,7 @@ console.log("CART",cart);
 
                 <Divider/>
 
-                <OrderForm></OrderForm>
+                <OrderForm onClose={handleCloseOrderForm}/>
             </Drawer>
         </>
     );

@@ -1,6 +1,6 @@
 import {Badge, Button, Drawer, Form, message, Input, Select, type FormProps} from "antd";
 import {useAppSelector} from "../../../store";
-import {useState} from "react";
+import React, {useState} from "react";
 import {
     type ICreateOrderItem, useCreateOrderMutation,
     useGetCitiesQuery,
@@ -10,7 +10,14 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 import {useGetCartQuery} from "../../../services/apiCart.ts";
 
-const OrderForm: React.FC = () => {
+interface OrderFormProps {
+    onClose: () => void;
+}
+
+
+const OrderForm: React.FC<OrderFormProps> = ({onClose}) => {
+
+
     const [open, setOpen] = useState(false);
     const { user } = useAppSelector((state) => state.auth);
     console.log(user);
@@ -41,7 +48,9 @@ const OrderForm: React.FC = () => {
             message.success('Order created');
 
             refetch();
+            onClose();
             setOpen(false);
+
 
         } catch (err) {
             console.error('Create order failed:', err);
