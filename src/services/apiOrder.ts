@@ -48,7 +48,13 @@ export const apiOrder = createApi({
             providesTags: ['Order'],
         }),
         getCities: builder.query<ICityItem[], string>({
-            query: (city) => `${city}`,
+            query: (city) => ({
+                url: `search-city`,
+                params: {
+                    city,
+                },
+            }),
+
             providesTags: ['Order'],
         }),
         getPostDepartments: builder.query<IPostDepartmentItem[], ISearchPostDepartment>({
