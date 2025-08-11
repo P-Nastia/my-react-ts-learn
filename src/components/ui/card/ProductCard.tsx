@@ -104,7 +104,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                              </div>
                         <br/>
                         <Link
-                            to={`/product/${product.id}`}
+                            to={`/products/${product.slug}/${product.id}`}
                             className="!text-white !bg-orange-500 !px-3 !py-1 !rounded !hover:bg-orange-100"
                         >
                             Переглянути

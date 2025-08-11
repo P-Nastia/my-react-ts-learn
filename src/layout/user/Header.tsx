@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 
     return (
         <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
-            <h1 className="text-xl font-semibold">Pizushi</h1>
+            <Link to="/" className="text-xl font-semibold">Pizushi</Link>
             <div className="flex items-center gap-4">
 
                 {user ? (

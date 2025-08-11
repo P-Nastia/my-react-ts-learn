@@ -8,7 +8,6 @@ import {APP_ENV} from "../../../env";
 import type {ICartItem} from "../../../store/localCartSlice.ts";
 import {useCart} from "../../../hooks/useCart.ts";
 import {useAppSelector} from "../../../store";
-import {Link} from "react-router";
 
 const { Title } = Typography;
 
@@ -75,14 +74,16 @@ const ProductPage: React.FC = () => {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32 }}>
 
                     <div style={{ flex: 1, minWidth: 300 }}>
-                        <Carousel>
+                        <Carousel key={currentProduct.id} autoplay dots arrows style={{ width: '100%',  overflow: 'hidden' }}>
                             {currentProduct.productImages?.map((img) => (
-                                <div key={img.id}>
+                                <div key={img.id} style={{  display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <Image
                                         src={`${APP_ENV.IMAGES_800_URL}${img.name}`}
                                         alt="Product"
                                         width="100%"
-                                        style={{ borderRadius: 8 }}
+                                        height="100%"
+                                        style={{ objectFit: 'cover', borderRadius: 8 }}
+                                        //preview={false}
                                     />
                                 </div>
                             ))}
@@ -124,7 +125,7 @@ const ProductPage: React.FC = () => {
                             >
                                 {allProducts.map(product => (
                                     <Radio.Button key={product.id} value={product.id}
-                                    onClick={(e) => navigate(`/product/${product.id}`)}>
+                                    onClick={(e) => navigate(`/products/${product.slug}/${product.id}`)}>
                                         {product.productSize?.name}
                                     </Radio.Button>
                                 ))}

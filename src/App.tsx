@@ -79,15 +79,17 @@ const App: React.FC = () => {
                   <ProductsPage />
                 </React.Suspense>
               } />
+
+              <Route path=":slug/:id" element={
+                <React.Suspense fallback={<>...</>}>
+                  <ProductPage />
+                </React.Suspense>
+              } />
+            </Route>
             </Route>
 
 
-            <Route path="product/:id" element={
-              <React.Suspense fallback={<>...</>}>
-                <ProductPage />
-              </React.Suspense>
-            } />
-          </Route>
+
 
           {/* Admin Routes */}
           <Route path="admin" element={<RequireAdmin />}>
