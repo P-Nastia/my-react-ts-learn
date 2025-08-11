@@ -5,7 +5,7 @@ import {APP_ENV} from "../../env";
 const UserHomePage: React.FC = () => {
     // Отримуємо категорії з API
     const { data: categories, error, isLoading } = useGetAllCategoriesQuery();
-
+console.log("CATEGORIES", categories);
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900">
             {/* Hero Section */}
@@ -42,7 +42,7 @@ const UserHomePage: React.FC = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                         {categories.map((cat) => (
                             <Link
-                                to={`/menu/${cat.slug}`}
+                                to={`/products/${cat.slug}`}
                                 key={cat.id}
                                 className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition"
                             >

@@ -4,6 +4,7 @@ import React from "react";
 
 // Auth check
 import RequireAdmin from "./components/protectedRoute/requireAdmin.tsx";
+import ProductsByCategoryPage from "./pages/Product/byCategory";
 
 // Lazy-loaded layouts
 const UserLayout = React.lazy(() => import("./layout/user/UserLayout.tsx"));
@@ -73,21 +74,37 @@ const App: React.FC = () => {
                 <RegistrationPage />
               </React.Suspense>
             } />
+
             <Route path="products">
-              <Route index element={
-                <React.Suspense fallback={<>...</>}>
-                  <ProductsPage />
-                </React.Suspense>
-              } />
 
-              <Route path=":slug/:id" element={
-                <React.Suspense fallback={<>...</>}>
-                  <ProductPage />
-                </React.Suspense>
-              } />
-            </Route>
-            </Route>
+              <Route
+                  index
+                  element={
+                    <React.Suspense fallback={<>...</>}>
+                      <ProductsPage />
+                    </React.Suspense>
+                  }
+              />
 
+              <Route
+                  path=":categorySlug"
+                  element={
+                    <React.Suspense fallback={<>...</>}>
+                      <ProductsByCategoryPage />
+                    </React.Suspense>
+                  }
+              />
+
+              <Route
+                  path=":categorySlug/:productSlug/:id"
+                  element={
+                    <React.Suspense fallback={<>...</>}>
+                      <ProductPage />
+                    </React.Suspense>
+                  }
+              />
+            </Route>
+</Route>
 
 
 

@@ -51,6 +51,11 @@ export const apiProduct = createApi({
             query: (slug) => `slug/${slug}`,
             providesTags: ['Product'],
         }),
+        getProductsByCategory: builder.query<ProductItemModel[], string>({
+
+            query: (category) => `${category}`,
+            providesTags: ['Products'],
+        }),
     }),
 });
 
@@ -61,4 +66,5 @@ export const {
     useGetSizesQuery,
     useGetProductByIdQuery,
     useGetProductsBySlugQuery,
+    useGetProductsByCategoryQuery,
 } = apiProduct;

@@ -68,6 +68,7 @@ const ProductPage: React.FC = () => {
         );
     }
 
+    // @ts-ignore
     return (
         <div style={{ marginTop: '5%', display: 'flex', justifyContent: 'center' }}>
             <div style={{ maxWidth: 1100, width: '100%' }} className="product-page-container">
@@ -125,7 +126,7 @@ const ProductPage: React.FC = () => {
                             >
                                 {allProducts.map(product => (
                                     <Radio.Button key={product.id} value={product.id}
-                                    onClick={(e) => navigate(`/products/${product.slug}/${product.id}`)}>
+                                    onClick={(e) => navigate(`/products/${product.category.slug}/${product.slug}/${product.id}`)}>
                                         {product.productSize?.name}
                                     </Radio.Button>
                                 ))}

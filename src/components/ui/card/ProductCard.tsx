@@ -28,6 +28,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const visible = ingredients.slice(0, 2);
     const hidden = ingredients.slice(2);
 
+    console.log("product", product);
     return (
         <Col xs={24} sm={12} md={8} lg={6}>
             <div className="h-full flex">
@@ -104,7 +105,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                              </div>
                         <br/>
                         <Link
-                            to={`/products/${product.slug}/${product.id}`}
+                            to={`/products/${product.category.slug}/${product.slug}/${product.id}`}
                             className="!text-white !bg-orange-500 !px-3 !py-1 !rounded !hover:bg-orange-100"
                         >
                             Переглянути
