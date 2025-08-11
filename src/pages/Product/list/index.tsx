@@ -2,6 +2,7 @@ import {Row} from 'antd';
 import {useGetAllProductsQuery} from "../../../services/apiProduct.ts";
 import ProductCard from "../../../components/ui/card/ProductCard.tsx";
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
+import Breadcrumbs from "../../../components/ui/breadcrumbs";
 
 
 
@@ -19,6 +20,7 @@ export const ProductsPage: React.FC = () => {
 
     return (
         <>
+            <Breadcrumbs/>
             {isLoading && <LoadingOverlay/>}
             <div style={{padding: 24}}>
                 <Row gutter={[16, 16]}>
