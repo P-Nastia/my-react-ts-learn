@@ -199,7 +199,7 @@ const AdminUsersPage: React.FC = () => {
                 </div>
             </Space>
 
-            <Table<IAdminUser> columns={columns} dataSource={data?.users}
+            <Table<IAdminUser> columns={columns} dataSource={data?.list}
                                pagination={false}
             />
             <CustomPagination currentPage={search.paginationRequest.currentPage}

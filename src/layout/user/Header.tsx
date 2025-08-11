@@ -3,20 +3,34 @@ import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
 import {useAppDispatch, useAppSelector} from "../../store";
 import {logout} from "../../store/authSlice.ts";
-import {Button} from "antd";
+import {Button, Input} from "antd";
 import CartDrawer from "../../components/ui/cart";
 import {useCart} from "../../hooks/useCart.ts";
 import {apiCart} from "../../services/apiCart.ts";
 import {addItem} from "../../store/localCartSlice.ts";
+import {useSearchParams} from "react-router";
+import React from "react";
 
 const Header: React.FC = () => {
-
+    //const { categorySlug } = useParams<{ categorySlug: string }>();
+    //console.log("categorySlug",categorySlug);
     const {user} = useAppSelector(state => state.auth);
 
     const { cart } = useCart(user!=null);
 
     const dispatch = useAppDispatch();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const value = searchParams.get("value") || "";
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        const params = new URLSearchParams(searchParams);
+        params.set("value", newValue);
+        params.set("page", "1"); // reset to first page on new search
+        setSearchParams(params);
+    };
 
     const logoutHandler = async () => {
         // if (!serverCart?.items) return;
@@ -34,6 +48,12 @@ const Header: React.FC = () => {
     return (
         <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
             <Link to="/" className="text-xl font-semibold">Pizushi</Link>
+            <Input
+                placeholder="Пошук продукту"
+                value={value}
+                onChange={handleSearchChange}
+                style={{ width: 200 }}
+            />
             <div className="flex items-center gap-4">
 
                 {user ? (

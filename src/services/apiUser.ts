@@ -25,14 +25,14 @@ export interface ISearchUsers{
     endDate?: string;
 }
 
-export interface IPaginationUsersResponse{
+export interface IPaginationResponse{
     currentPage: number;
     totalAmount: number;
 }
 
-export interface ISearchResponse{
-    users: IAdminUser[];
-    pagination: IPaginationUsersResponse
+export interface ISearchUserResponse{
+    list: IAdminUser[];
+    pagination: IPaginationResponse
 }
 
 export interface IEditUser{
@@ -52,7 +52,7 @@ export const apiUser = createApi({
             query: () => 'list',
             providesTags: ['Users'],
         }),
-        getSearchUsers: builder.query<ISearchResponse, ISearchUsers>({
+        getSearchUsers: builder.query<ISearchUserResponse, ISearchUsers>({
             query: (data) => ({
                 url: 'search',
                 method: 'POST',

@@ -2,6 +2,21 @@ import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../utilities/createBaseQuery.ts";
 import type {IProductCreate, ProductIngredientModel, ProductItemModel, ProductSizeModel} from "./types.ts";
 import {serialize} from "object-to-formdata";
+import type {IPaginationResponse} from "./apiUser.ts";
+
+export interface ISearchProducts{
+    paginationRequest: {
+        currentPage: number;
+        itemsPerPage: number;
+    };
+    categoryName: string;
+    value: string;
+}
+
+export interface ISearchProductResponse{
+    list: ProductItemModel[];
+    pagination: IPaginationResponse
+}
 
 export const apiProduct = createApi({
     reducerPath: 'api/products',
@@ -56,6 +71,14 @@ export const apiProduct = createApi({
             query: (category) => `${category}`,
             providesTags: ['Products'],
         }),
+        getSearchProducts: builder.query<ISearchProductResponse, ISearchProducts>({
+            query: (data) => ({
+                url: 'search',
+                method: 'POST',
+                body: data
+            }),
+            providesTags: ['Products'],
+        }),
     }),
 });
 
@@ -67,4 +90,5 @@ export const {
     useGetProductByIdQuery,
     useGetProductsBySlugQuery,
     useGetProductsByCategoryQuery,
+    useGetSearchProductsQuery,
 } = apiProduct;
