@@ -3,12 +3,13 @@ import { useGetUserOrdersQuery } from "../../services/apiOrder.ts"
 import {Card,List,Typography,Divider,Row,Col,Image,Spin,Empty} from 'antd';
 import dayjs from 'dayjs';
 import {APP_ENV} from "../../env";
+import {Link} from "react-router";
 
 const { Title, Text } = Typography;
 
 const OrdersPage: React.FC = () => {
     const token = localStorage.getItem('token');
-    console.log("token",token);
+
 
     const {
         data: orders,
@@ -84,13 +85,15 @@ const OrdersPage: React.FC = () => {
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={
-                                                <Image
-                                                    width={64}
-                                                    src={`${APP_ENV.IMAGES_400_URL}${item.productImage}`}
-                                                    alt={item.productName}
-                                                    preview={false}
-                                                    className="rounded"
-                                                />
+                                                <Link to={`/products/${item.categorySlug}/${item.productSlug}/${item.productId}`}>
+                                                    <Image
+                                                        width={64}
+                                                        src={`${APP_ENV.IMAGES_400_URL}${item.productImage}`}
+                                                        alt={item.productName}
+                                                        preview={false}
+                                                        className="rounded cursor-pointer hover:opacity-80 transition"
+                                                    />
+                                                </Link>
                                             }
                                             title={item.productName}
                                             description={`Кількість: ${item.count} x ${item.priceBuy} ₴`}

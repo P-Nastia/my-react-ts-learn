@@ -49,6 +49,7 @@ export interface IOrderItem {
     productSlug: string;
     productName: string;
     productImage: string;
+    categorySlug: string;
 }
 
 export const apiOrder = createApi({
