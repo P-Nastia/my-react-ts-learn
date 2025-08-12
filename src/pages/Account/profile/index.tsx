@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {Button, Form, type FormProps, Input, message} from "antd";
 import type { ServerError} from "../../../services/types.ts";
 import {useFormServerErrors} from "../../../utilities/useFormServerErrors.ts";
@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
         try {
             const result = await edit(values).unwrap();
             if (result?.token) {
-                dispatch(loginSuccess(result.token)); // ⬅️ update token in Redux
+                dispatch(loginSuccess(result.token));
                 message.success('Профіль оновлено');
                 navigate('/');
             } else {
@@ -204,6 +204,13 @@ const ProfilePage: React.FC = () => {
                             </>
                         )}
                     </Form>
+
+                    <Link
+                        to="/orders"
+                        className="text-orange-500 border-orange-500 hover:bg-orange-50 mt-5"
+                    >
+                        Переглянути історію замовлень
+                    </Link>
 
                 </div>
             </div>

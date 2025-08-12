@@ -21,7 +21,34 @@ export interface ICreateOrderItem {
 }
 
 export interface IOrder {
-id: number;
+    id: number;
+    status: string;
+    dateCreated: string;
+    totalPrice: number;
+    deliveryInfo: IDeliveryInfo;
+    orderItems: IOrderItem[];
+}
+
+export interface IDeliveryInfo {
+    recipientName: string;
+    phoneNumber: string;
+    postDepartment: ISimpleType;
+    paymentType: ISimpleType;
+    city: ISimpleType;
+}
+
+export interface ISimpleType {
+    id: number;
+    name: string;
+}
+
+export interface IOrderItem {
+    priceBuy: number;
+    count: number;
+    productId: number;
+    productSlug: string;
+    productName: string;
+    productImage: string;
 }
 
 export const apiOrder = createApi({
@@ -29,8 +56,13 @@ export const apiOrder = createApi({
     baseQuery: createBaseQuery('order'),
     tagTypes: ['Order'],
     endpoints: (builder) => ({
-        getUserOrders: builder.query<IOrder, void>({
-            query: () => 'list',
+        getUserOrders: builder.query<IOrder[], string>({
+            query: (token) => ({
+                url: 'list',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }),
             providesTags: ['Order'],
         }),
         getPaymentTypes: builder.query<IBaseSelectItem[], void>({
