@@ -71,8 +71,14 @@ const ProfilePage: React.FC = () => {
             changePasswordForm.resetFields();
             setChangePasswordVisible(false);
         } catch (error: any) {
-            const serverError = error as ServerError;
-            if (serverError?.status === 400 && serverError?.data?.oldPassword) {
+            const serverError = error as {
+                status: number;
+                data: {
+                    oldPassword?: string;
+                };
+            };
+
+            if (serverError?.status === 400 && typeof serverError.data?.oldPassword === "string") {
                 changePasswordForm.setFields([
                     {
                         name: "oldPassword",
@@ -99,7 +105,7 @@ const ProfilePage: React.FC = () => {
                         onFinish={onFinish}
                         className="space-y-4"
                     >
-                        <ImageUploadFormItem name="image" label="" src={`${APP_ENV.IMAGES_400_URL}${user.image}`}  />
+                        <ImageUploadFormItem name="image" label="" src={`${APP_ENV.IMAGES_400_URL}${user?.image}`}  />
 
                         <Form.Item<IEditModel>
                             label={<span className="text-gray-700 dark:text-white font-medium"></span>}

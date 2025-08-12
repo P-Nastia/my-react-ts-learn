@@ -77,8 +77,7 @@ console.log(user);
                     layout="vertical"
                     onFinish={onFinish}
                     initialValues={{
-                        recipientName: user?.name || '',
-                        phoneNumber: user?.phone || '',
+                        recipientName: user?.name || ''
                     }}
                 >
                     <Form.Item<ICreateOrderItem>
@@ -99,7 +98,6 @@ console.log(user);
 
                     <Form.Item<ICreateOrderItem>
                         label="Місто"
-                        name="cityId"
                         rules={[{ required: true, message: "Оберіть місто" }]}
                     >
                         <Select

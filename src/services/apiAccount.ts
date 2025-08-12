@@ -7,6 +7,7 @@ import type {Dispatch} from "@reduxjs/toolkit";
 import type {RootState} from "../store";
 import {apiCart} from "./apiCart.ts";
 import {clearCart} from "../store/localCartSlice.ts";
+import type {AppDispatch} from "../store";
 
 export interface ILoginRequest {
     email: string;
@@ -53,11 +54,13 @@ const handleAuthSuccess = async (
     try {
         const { data } = await queryFulfilled;
         if (data?.token) {
-            dispatch(loginSuccess(data.token));
+            (dispatch as AppDispatch)(loginSuccess(data.token));
 
             const localCart = getState().localCart.items;
             if (localCart.length > 0) {
-                await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
+                await (dispatch as AppDispatch)(
+                    apiCart.endpoints.addToCartsRange.initiate(localCart)
+                ).unwrap();
             }
 
             dispatch(clearCart());

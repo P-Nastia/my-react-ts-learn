@@ -43,7 +43,6 @@ export const ProductsPage: React.FC = () => {
                     totalItems={totalAmount}
                     itemsPerPage={itemsPerPage}
                     onPageChange={handlePageChange}
-                    style={{ marginTop: 20 }}
                 />
             )}
         </>

@@ -14,8 +14,8 @@ const OrdersPage: React.FC = () => {
     const {
         data: orders,
         isLoading
-    } = useGetUserOrdersQuery(token, {
-        skip: !token
+    } = useGetUserOrdersQuery(token as string, {
+        skip: !token,
     });
 
     if (!orders || orders.length === 0) {

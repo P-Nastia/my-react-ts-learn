@@ -129,7 +129,7 @@ const ProductPage: React.FC = () => {
                                 >
                                     {allProducts.map(product => (
                                         <Radio.Button key={product.id} value={product.id}
-                                                      onClick={(e) => navigate(`/products/${product.category.slug}/${product.slug}/${product.id}`)}>
+                                                      onClick={() => navigate(`/products/${product!.category!.slug}/${product.slug}/${product.id}`)}>
                                             {product.productSize?.name}
                                         </Radio.Button>
                                     ))}

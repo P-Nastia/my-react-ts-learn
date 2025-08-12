@@ -1,6 +1,7 @@
 import {Card, Col, Tooltip, Image} from 'antd';
 import {APP_ENV} from "../../../env";
 import {Link} from "react-router-dom";
+import type {ICategoryItem} from "../../../services/types.ts";
 
 
 interface Ingredient {
@@ -19,6 +20,7 @@ interface ProductCardProps {
         productSize?: { name: string };
         productIngredients?: Ingredient[];
         productImages?: { name: string }[];
+        category?: ICategoryItem
     };
 }
 
@@ -104,8 +106,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
 
                              </div>
                         <br/>
+
                         <Link
-                            to={`/products/${product.category.slug}/${product.slug}/${product.id}`}
+                            to={`/products/${product.category!.slug}/${product.slug}/${product.id}`}
                             className="!text-white !bg-orange-500 !px-3 !py-1 !rounded !hover:bg-orange-100"
                         >
                             Переглянути
