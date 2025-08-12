@@ -5,6 +5,7 @@ import React from "react";
 // Auth check
 import RequireAdmin from "./components/protectedRoute/requireAdmin.tsx";
 import ProductsByCategoryPage from "./pages/Product/byCategory";
+import ProfilePage from "./pages/Account/profile";
 
 // Lazy-loaded layouts
 const UserLayout = React.lazy(() => import("./layout/user/UserLayout.tsx"));
@@ -52,6 +53,11 @@ const App: React.FC = () => {
             <Route path="login" element={
               <React.Suspense fallback={<>...</>}>
                 <LoginPage />
+              </React.Suspense>
+            } />
+            <Route path="profile" element={
+              <React.Suspense fallback={<>...</>}>
+                <ProfilePage />
               </React.Suspense>
             } />
             <Route path="forgot-password" element={

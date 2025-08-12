@@ -32,6 +32,18 @@ export interface IResetPasswordRequest {
     email: string;
 }
 
+export interface IEditModel{
+    firstName: string;
+    lastName: string;
+    email: string;
+    image: string;
+}
+
+export interface IChangePasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+}
+
 // 🔄 Уніфікована логіка обробки авторизації
 const handleAuthSuccess = async (
     queryFulfilled: Promise<{ data: IAuthResponse }>,
@@ -126,6 +138,27 @@ export const apiAccount = createApi({
                 };
             },
         }),
+        edit: builder.mutation<ILoginResponse, IEditModel>({
+            query: (credentials) => {
+                const formData = serialize(credentials);
+
+                return {
+                    url: 'edit',
+                    method: 'PUT',
+                    body: formData
+                };
+            },
+        }),
+        changePassword: builder.mutation<void, IChangePasswordRequest>({
+            query: (data) => ({
+                url: 'changePassword',
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }),
+        }),
     }),
 });
 
@@ -135,5 +168,7 @@ export const {
     useForgotPasswordMutation,
     useValidateResetTokenQuery,
     useResetPasswordMutation,
-    useRegisterMutation
+    useRegisterMutation,
+    useEditMutation,
+    useChangePasswordMutation,
 } = apiAccount;

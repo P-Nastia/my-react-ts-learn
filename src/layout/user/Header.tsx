@@ -8,7 +8,7 @@ import CartDrawer from "../../components/ui/cart";
 import {useCart} from "../../hooks/useCart.ts";
 import {apiCart} from "../../services/apiCart.ts";
 import {addItem} from "../../store/localCartSlice.ts";
-import {useSearchParams} from "react-router";
+import {useNavigate, useSearchParams} from "react-router";
 import React from "react";
 
 const Header: React.FC = () => {
@@ -23,6 +23,7 @@ const Header: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const value = searchParams.get("value") || "";
+    const navigate = useNavigate();
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
@@ -43,6 +44,7 @@ const Header: React.FC = () => {
         serverCart.forEach(item => {
             dispatch(addItem(item));
         });
+        navigate("/");
     }
 
     return (
@@ -58,7 +60,7 @@ const Header: React.FC = () => {
 
                 {user ? (
                     <>
-                        <Link to="/account" className="flex items-center gap-2">
+                        <Link to="profile" className="flex items-center gap-2">
                             <img
                                 src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}
                                 alt={user.name}

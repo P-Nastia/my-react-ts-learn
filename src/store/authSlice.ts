@@ -57,6 +57,7 @@ const authSlice = createSlice({
             const user = getUserFromToken(action.payload);
             if (user) {
                 state.user = user;
+                console.log("state.user",state.user);
                 localStorage.setItem('token', action.payload);
             }
         },
