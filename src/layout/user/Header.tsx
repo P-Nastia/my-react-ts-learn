@@ -52,9 +52,9 @@ const Header: React.FC = () => {
             <Link
                 to="/"
                 style={{
-                    fontSize: '2.0rem',
+                    fontSize: '3.0rem',
                     fontFamily: '"Montserrat", sans-serif',
-                    fontWeight: 700, // 700 for bold, 900 for extra bold
+                    fontWeight: 700,
                     color: 'white',
                     textDecoration: 'none',
                 }}
