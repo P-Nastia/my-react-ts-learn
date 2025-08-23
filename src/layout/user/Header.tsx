@@ -49,7 +49,18 @@ const Header: React.FC = () => {
 
     return (
         <header className="w-full py-4 px-6 bg-orange-500 text-white shadow-md flex justify-between">
-            <Link to="/" className="text-xl font-semibold">Pizushi</Link>
+            <Link
+                to="/"
+                style={{
+                    fontSize: '2.0rem',
+                    fontFamily: '"Montserrat", sans-serif',
+                    fontWeight: 700, // 700 for bold, 900 for extra bold
+                    color: 'white',
+                    textDecoration: 'none',
+                }}
+            >
+                Pizushi
+            </Link>
             <Input
                 placeholder="Пошук продукту"
                 value={value}
